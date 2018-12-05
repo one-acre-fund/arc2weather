@@ -27,11 +27,6 @@ dataDir <- normalizePath(file.path("..", "arc2_weather_data"))
 rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
 load(paste(rawDir, "weatherRasterList.Rdata", sep = "/")) # this is huge! Find a way to break this down to simplify calculations. 
 
-# look at names of rasters << so many but works in concept!
-
-test <- lapply(arcWeatherRaw, function (x) names(x))
-
-
 # SUBSET BY YEAR
 subsetYear <- function(rList, year){
   # input - list of weather rasters and year as INT.
@@ -152,6 +147,24 @@ oafArea <- do.call(bind, lapply(gadmFiles, function(x){readRDS(x)}))
 
 # this is what I now what to use to subset the large and unwieldy weather data, by decade or year if need be. use velox to speed this up!
 oafAreaReproject <- spTransform(oafArea, CRS("+proj=longlat +a=6371000 +b=6371000 +no_defs"))
+
+
+# get map Values
+getMapValues <- function(rasterList, map){
+  # this function trims the africa sized raster down to just the extent of 1AF countries we care about
+  # output: a list of rasters to go into the weight calculations
+  # this cna also be used on a single raster but it'll then return 
+  createVelox = velox(brick(rasterList))
+  
+  return(createVelox$extract)
+}
+
+
+test <- velox(stack(subsetYear(arcWeatherRaw, 1983)))
+
+test2 <- test$extract(oafAreaReproject, fun=mean) # this is a 1149 x 365 matrix, there is one column per band in the stack and one row for each object in oafAreaProject
+
+
 
 
 
