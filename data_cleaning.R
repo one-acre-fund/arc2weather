@@ -15,24 +15,30 @@ cat("\014")
 # reshape is for easy table transformation
 # knitr is to make pretty tables at the end
 # ggplot2 is for making graphs
-libs <- c("tidyverse", "knitr", "readxl", "curl", "raster", "rgdal")
+libs <- c("tidyverse", "knitr", "readxl", "curl", "raster", "rgdal", "velox")
 lapply(libs, require, character.only = T)
 
+forceUpdate <- FALSE
 
-load("weatherRasterList.Rdata")
+dataDir <- normalizePath(file.path("..", "arc2_weather_data"))
 
-
-### weather brick
-# weatherBrick <- brick(arcWeatherRaw)
-# save(weatherBrick, file = "weatherBrick.Rdata")
-
-if(!file.exists("weatherBrick.Rdata") || forceUpdate){
-  weatherBrick <- brick(arcWeatherRaw)
+if(!file.exists(paste(dataDir, "weatherBrick.Rdata", sep = "/")) || forceUpdate){
+  rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
+  load(paste(rawDir, "weatherRasterList.Rdata", sep = "/"))
+  weatherBrick <- velox(brick(arcWeatherRaw))
+  #weatherBrick[weatherBrick < 0] <- NA
   save(weatherBrick, file = "weatherBrick.Rdata")
 } else {
-  load("weatherBrick.Rdata")
+  load(paste(dataDir, "weatherBrick.Rdata", sep = "/"))
 }
 
-## now I want to do extract meta data on dates in the brick and create yearly and 
-## monthly aggregates for different points that I extract from the brick. TBD if that's
-## all possible.
+# weahter brick will be the most efficient
+names(weatherBrick) <- gsub(".gz", "", names(weatherBrick))
+names(weatherBrick) <- gsub("daily_clim.bin.", "weatherValues_", names(weatherBrick))
+
+#values(weatherBrick)[values(weatherBrick) < 0] <- NA # file is too big
+
+wb.velox <- velox(weatherBrick)
+
+# get a daily average for the full data set. I'd probably actually want to crop this first to just our locations before trying this but let's see what happens.
+dailyMean <- calc(weatherBrick, fun = function(x){mean(x, na.rm=T)})
