@@ -22,23 +22,6 @@ forceUpdate <- FALSE
 
 dataDir <- normalizePath(file.path("..", "arc2_weather_data"))
 
-if(!file.exists(paste(dataDir, "weatherBrick.Rdata", sep = "/")) || forceUpdate){
-  rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
-  load(paste(rawDir, "weatherRasterList.Rdata", sep = "/"))
-  weatherBrick <- velox(brick(arcWeatherRaw))
-  #weatherBrick[weatherBrick < 0] <- NA
-  save(weatherBrick, file = "weatherBrick.Rdata")
-} else {
-  load(paste(dataDir, "weatherBrick.Rdata", sep = "/"))
-}
+rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
+load(paste(rawDir, "weatherRasterList.Rdata", sep = "/")) # this is huge! Find a way to break this down to simplify calculations. 
 
-# weahter brick will be the most efficient
-names(weatherBrick) <- gsub(".gz", "", names(weatherBrick))
-names(weatherBrick) <- gsub("daily_clim.bin.", "weatherValues_", names(weatherBrick))
-
-#values(weatherBrick)[values(weatherBrick) < 0] <- NA # file is too big
-
-wb.velox <- velox(weatherBrick)
-
-# get a daily average for the full data set. I'd probably actually want to crop this first to just our locations before trying this but let's see what happens.
-dailyMean <- calc(weatherBrick, fun = function(x){mean(x, na.rm=T)})
