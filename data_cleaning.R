@@ -27,6 +27,13 @@ dataDir <- normalizePath(file.path("..", "arc2_weather_data"))
 rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
 load(paste(rawDir, "weatherRasterList.Rdata", sep = "/")) # this is huge! Find a way to break this down to simplify calculations. 
 
+if(!file.exist(paste(rawDir, "weatherRasterList.rds", sep = "/")) | forceUpdate){
+  load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/"))
+  saveRDS(arcWeatherRaw, file=paste(rawDir, "weatherRasterList.rds", sep = "/"))
+} else {
+  arcWeatherRaw <- readRDS(file = paste(rawDir, "weatherRasterList.Rdata", sep = "/"))
+}
+
 # SUBSET BY YEAR
 subsetYear <- function(rList, year){
   # input - list of weather rasters and year as INT.
@@ -98,8 +105,12 @@ if(!file.exists(paste0(dataDir, "/GADM_2.8_KEN_adm2.rds"))){
   keBoundaries <- readRDS(paste0(dataDir, "/GADM_2.8_KEN_adm2.rds"))
 }
 
-# I additionally want to subset this down to just western Kenya because it's too computationally intentsive to run these calculations for other areas. I'm going to subset the shape file to just western Kenya and the plot it to confirm I've done it correctly.
-# original crs for site points in Kenya = +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0
+# I additionally want to subset this down to just western Kenya because it's too
+# computationally intentsive to run these calculations for other areas. I'm
+# going to subset the shape file to just western Kenya and the plot it to
+# confirm I've done it correctly. 
+
+# original crs for site points in Kenya = +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0 
 # original crs for ke boundaries = +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0
 # original crs for weather data = +proj=longlat +a=6371000 +b=6371000 +no_defs
 
@@ -160,12 +171,43 @@ getMapValues <- function(rasterList, map){
 }
 
 
-test <- velox(stack(subsetYear(arcWeatherRaw, 1983)))
+# there's a limit to how many seasons I can combine. I want to aggregate the
+# data so that it's easy to get the full picture or any relevant subsets What
+# rules should I follow for determining which subsets to make? For now I should
+# just make the long term average >> and set this us to easily update as we get
+# more data.
 
-test2 <- test$extract(oafAreaReproject, fun=mean) # this is a 1149 x 365 matrix, there is one column per band in the stack and one row for each object in oafAreaProject
+# HOW TO HANDLE THE LARGE AMOUNT OF DATA subset the rasters (in groups if need
+# be) to just the areas we're interested in. For the purposes of updating the
+# data going forward, we'll create decade long groupings which should be
+# manageable for extracting values and then summarizing them
+
+yearSubsets <- list(1983:1990, 1991:2000, 2001:2016)
+
+eighties <- velox(stack(subsetYear(arcWeatherRaw, yearSubsets[[1]])))
+ninties <- velox(stack(subsetYear(arcWeatherRaw, yearSubsets[[2]])))
+oughts <- velox(stack(subsetYear(arcWeatherRaw, yearSubsets[[3]])))
+
+oafOperatingArea <- do.call(c, list(eighties$extract(oafAreaReproject, fun = NULL),
+                      ninties$extract(oafAreaReproject, fun = NULL),
+                      oughts$extract(oafAreaReproject, fun = NULL)))
 
 
+## check the size of this file to see if we've made our problem a bit more manageable
+checkSize <- function(obj, unit){
+  return(format(object.size(obj), units = unit))
+}
 
+checkSize(oafOperatingArea, "Gb") # yes, more manageable but still really big.
 
+# this is currently working with spatial polygons but what I want is to take all the points for these countries and then 
+
+# test2 <- test$extract(oafAreaReproject, fun=mean) # this is a 1149 x 365 matrix, there is one column per band in the stack and one row for each object in oafAreaProject
+# 
+# test3 <- test$extract(oafAreaReproject, fun=NULL) # this is a list of 1149 objects with 365 columns per element. Those are the values 
+
+# first just crop the data to these countries. 
+test$crop(oafAreaReproject)
+format(object.size(test), units = "Kb")
 
 
