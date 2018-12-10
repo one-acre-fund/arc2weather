@@ -185,6 +185,11 @@ getMapValues <- function(rasterList, map){
 # manageable for extracting values and then summarizing them
 
 
+# notes on how to use crop and extract ---------------
+
+# these data are large
+
+
 # and the full example -------------------------
 veloxLoop <- list()
 for(i in seq_along(arcWeatherRaw)){
@@ -200,20 +205,19 @@ checkSize <- function(obj, unit){
   return(format(object.size(obj), units = unit))
 }
 
+# notes on how velox works -----------------------
+
 ### investigate the `oafoperatingarea` object. I want this to have a matrix for
 #each day for each location which means that it'll be a very long list of
 #matrices. I think I really just want to create a big velox stack and extract
 #the points I want taking the mean of that object. That should be manageable.
 
-# notes on how velox works -----------------------
-# this is currently working with spatial polygons but what I want is to take all the points for these countries and then 
-
 # test2 <- test$extract(oafAreaReproject, fun=mean) # this is a 1149 x 365 matrix, there is one column per band in the stack and one row for each object in oafAreaProject
 # 
 # test3 <- test$extract(oafAreaReproject, fun=NULL) # this is a list of 1149 objects with 365 columns per element. Those are the values 
 
-# first just crop the data to these countries. 
-test$crop(oafAreaReproject)
-format(object.size(test), units = "Kb")
+format(object.size(veloxLoop), units = "Kb") # much smaller!
+
+# extract GPS points from reduced set of points -------------
 
 
