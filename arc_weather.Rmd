@@ -67,9 +67,10 @@ forceUpdate <- FALSE
 dataDir <- normalizePath(file.path("..", "arc2_weather_data"))
 
 rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
-load(paste(rawDir, "weatherRasterList.Rdata", sep = "/")) # this is huge! Find a way to break this down to simplify calculations. 
 
-load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/"))
+if(!file.exists(paste(dataDir, "veloxLoop.rds", sep = "/")) | forceUpdate){
+  load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/")) # this is huge! Find a way to break this down to simplify calculations. 
+} 
 
 ```
 
@@ -216,14 +217,19 @@ There's a limit to how many seasons I can combine. I want to aggregate the data 
 HOW TO HANDLE THE LARGE AMOUNT OF DATA subset the rasters (in groups if need be) to just the areas we're interested in. For the purposes of updating the data going forward, we'll create decade long groupings which should be manageable for extracting values and then summarizing them
 
 ```{r}
-veloxLoop <- list()
-for(i in seq_along(arcWeatherRaw)){
-  tmp <- velox(arcWeatherRaw[[i]])
-  tmp$crop(oafAreaReproject)
-  veloxLoop[[i]] <- tmp
+if(!file.exists(paste(dataDir, "veloxLoop.rds", sep = "/")) | forceUpdate){
+  veloxLoop <- list()
+  for(i in seq_along(arcWeatherRaw)){
+    tmp <- velox(arcWeatherRaw[[i]])
+    tmp$crop(oafAreaReproject)
+    veloxLoop[[i]] <- tmp
+    
+  }
+  saveRDS(veloxLoop, file=paste(dataDir, "veloxLoop.rds", sep = "/"))
   
+} else {
+  veloxLoop <- readRDS(paste(dataDir, "veloxLoop.rds", sep = "/"))
 }
-
 ```
 
 ```{r}
@@ -247,6 +253,9 @@ The full workflow should be (with explanation):
 * Summarize those data! (but how do you know which are which?)
 
 ```{r}
+
+
+
 extractLoop <- list()
 for(i in seq_along(veloxLoop)){
   extractLoop[[i]] <- veloxLoop[[i]]$extract(siteReproject)
