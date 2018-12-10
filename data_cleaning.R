@@ -184,40 +184,21 @@ getMapValues <- function(rasterList, map){
 # data going forward, we'll create decade long groupings which should be
 # manageable for extracting values and then summarizing them
 
-babyList <- arcWeatherRaw[1:10]
-
-
-veloxLoop <- list()
-for(i in seq_along(babyList)){
-  tmp <- velox(babyList[[i]])
-  tmp$crop(oafAreaReproject)
-  veloxLoop[[i]] <- tmp
-  
-}
-
 
 # and the full example -------------------------
-longerList <- arcWeatherRaw[1:100]
-
 veloxLoop <- list()
-for(i in seq_along(longerList)){
-  tmp <- velox(longerList[[i]])
+for(i in seq_along(arcWeatherRaw)){
+  tmp <- velox(arcWeatherRaw[[i]])
   tmp$crop(oafAreaReproject)
   veloxLoop[[i]] <- tmp
   
 }
-
-longRunData$extract(oafAreaReproject, function(x){mean(x, na.rm = T)})
-
-oafOperatingArea <- c(list(eighties, ninties, oughts))
 
 
 ## check the size of this file to see if we've made our problem a bit more manageable
 checkSize <- function(obj, unit){
   return(format(object.size(obj), units = unit))
 }
-
-checkSize(oafOperatingArea, "Gb") # yes, more manageable but still really big.
 
 ### investigate the `oafoperatingarea` object. I want this to have a matrix for
 #each day for each location which means that it'll be a very long list of
