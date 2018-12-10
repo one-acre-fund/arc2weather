@@ -27,12 +27,14 @@ dataDir <- normalizePath(file.path("..", "arc2_weather_data"))
 rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
 load(paste(rawDir, "weatherRasterList.Rdata", sep = "/")) # this is huge! Find a way to break this down to simplify calculations. 
 
-if(!file.exist(paste(rawDir, "weatherRasterList.rds", sep = "/")) | forceUpdate){
-  load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/"))
-  saveRDS(arcWeatherRaw, file=paste(rawDir, "weatherRasterList.rds", sep = "/"))
-} else {
-  arcWeatherRaw <- readRDS(file = paste(rawDir, "weatherRasterList.Rdata", sep = "/"))
-}
+load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/"))
+
+# if(!file.exists(paste(rawDir, "weatherRasterList.rds", sep = "/")) | forceUpdate){
+#   #load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/"))
+#   saveRDS(arcWeatherRaw, file=paste(rawDir, "weatherRasterList.rds", sep = "/"))
+# } else {
+#   arcWeatherRaw <- readRDS(file = paste(rawDir, "weatherRasterList.Rdata", sep = "/"))
+# }
 
 # SUBSET BY YEAR
 subsetYear <- function(rList, year){
@@ -79,7 +81,7 @@ subsetYearMonth <- function(rList, year, month){
   
 }
 
-test <- subsetYearMonth(arcWeatherRaw, 1983, 1)
+#test <- subsetYearMonth(arcWeatherRaw, 1983, 1)
 
 
 # import the Kenya shapefile, focus on western Kenya and then subset for certain years
@@ -182,15 +184,32 @@ getMapValues <- function(rasterList, map){
 # data going forward, we'll create decade long groupings which should be
 # manageable for extracting values and then summarizing them
 
-yearSubsets <- list(1983:1990, 1991:2000, 2001:2016)
+babyList <- arcWeatherRaw[1:10]
 
-eighties <- velox(stack(subsetYear(arcWeatherRaw, yearSubsets[[1]])))
-ninties <- velox(stack(subsetYear(arcWeatherRaw, yearSubsets[[2]])))
-oughts <- velox(stack(subsetYear(arcWeatherRaw, yearSubsets[[3]])))
 
-oafOperatingArea <- do.call(c, list(eighties$extract(oafAreaReproject, fun = NULL),
-                      ninties$extract(oafAreaReproject, fun = NULL),
-                      oughts$extract(oafAreaReproject, fun = NULL)))
+veloxLoop <- list()
+for(i in seq_along(babyList)){
+  tmp <- velox(babyList[[i]])
+  tmp$crop(oafAreaReproject)
+  veloxLoop[[i]] <- tmp
+  
+}
+
+
+# and the full example -------------------------
+longerList <- arcWeatherRaw[1:100]
+
+veloxLoop <- list()
+for(i in seq_along(longerList)){
+  tmp <- velox(longerList[[i]])
+  tmp$crop(oafAreaReproject)
+  veloxLoop[[i]] <- tmp
+  
+}
+
+longRunData$extract(oafAreaReproject, function(x){mean(x, na.rm = T)})
+
+oafOperatingArea <- c(list(eighties, ninties, oughts))
 
 
 ## check the size of this file to see if we've made our problem a bit more manageable
@@ -199,6 +218,15 @@ checkSize <- function(obj, unit){
 }
 
 checkSize(oafOperatingArea, "Gb") # yes, more manageable but still really big.
+
+### investigate the `oafoperatingarea` object. I want this to have a matrix for
+#each day for each location which means that it'll be a very long list of
+#matrices. I think I really just want to create a big velox stack and extract
+#the points I want taking the mean of that object. That should be manageable.
+
+# limits to how big this can be...
+longRunAverage <- velox(stack(subsetYear(arcWeatherRaw, 1986:2016)))
+
 
 # this is currently working with spatial polygons but what I want is to take all the points for these countries and then 
 
