@@ -205,10 +205,7 @@ checkSize <- function(obj, unit){
 #matrices. I think I really just want to create a big velox stack and extract
 #the points I want taking the mean of that object. That should be manageable.
 
-# limits to how big this can be...
-longRunAverage <- velox(stack(subsetYear(arcWeatherRaw, 1986:2016)))
-
-
+# notes on how velox works -----------------------
 # this is currently working with spatial polygons but what I want is to take all the points for these countries and then 
 
 # test2 <- test$extract(oafAreaReproject, fun=mean) # this is a 1149 x 365 matrix, there is one column per band in the stack and one row for each object in oafAreaProject
