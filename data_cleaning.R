@@ -221,3 +221,7 @@ format(object.size(veloxLoop), units = "Kb") # much smaller!
 # extract GPS points from reduced set of points -------------
 
 
+
+
+
+
