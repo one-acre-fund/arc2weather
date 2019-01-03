@@ -188,16 +188,6 @@ I'll end up with some nested functions that will, in order:
 * Crop to OAF countries (or is there a way to do this earlier?)
 * Extract the GPS points of interest.
 
-
-```{r}
-## check the size of this file to see if we've made our problem a bit more manageable
-checkSize <- function(obj, unit){
-  return(format(object.size(obj), units = unit))
-}
-
-format(object.size(veloxLoop), units = "Kb") # much smaller!
-```
-
 ## Functions to subset
 
 * Subset by year - subset the raster list by year 
@@ -329,7 +319,7 @@ checkCRS <- function(veloxRasterList, spdf){
   veloxCrsCheck <- length(unique(veloxCrs)) == 1
   
   if(!veloxCrsCheck){
-    stop("\n VeloxRaster object has different CRS. Check this before proceeding")
+    stop("\n VeloxRaster object has different CRS in different layers. Check this before proceeding")
   }
   
   
