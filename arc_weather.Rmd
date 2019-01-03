@@ -296,6 +296,7 @@ convert_to_velox <- function(rList){
     return(list(veloxLoop, metaDf))
 }
 
+
 oafTrim <- function(veloxObj){
   # input: list of velox raster but use the first element of the object
   # output: list of velox raster trimmed to the OAF extent to simplify the calculations to come. 
@@ -334,25 +335,17 @@ checkCRS <- function(veloxRasterList, spdf){
   
   crsFormatCheck <- veloxRasterList[[1]]$crs == proj4string(spdf)
   if(!crsFormatCheck){
-    spdf <- spTransform(spdf, CRS(veloxRaster$crs))
-    return(spdf)
+    spdf <- spTransform(spdf, CRS(veloxRaster[[1]]$crs))
   }
 }
 
 
 ## function for extracting points and adding in labels
-extract_velox_gps <- function(veloxRaster, spdf, varsToKeep = NULL){
+extract_velox_gps <- function(veloxRaster, spdf){
   # input: v$extract_points(siteReproject) style code. 
   # Takes a list of velox raster and extracts the right data points
-  # output: a list with two elements: the first element is a list of velox rater values for the given gps points. The second list is the df of GPS points to later merge with those GPS points for the final output.
-  
-  # This checks which variables we want to keep from the spdf and keep those for future manipulation
-  if(is.null(varsToKeep)){
-    return(cbind(spdf@data, veloxRaster))
-  } else {
-  return(cbind(spdf@data, veloxRaster) %>%
-           dplyr::select(one_of(varsToKeep)))
-  }
+  # output: a list with two elements: the first element is a df of the extracted values for the given gps points. 
+  #The second list is the df of GPS points to later merge with those GPS points for the final output.
   
   ## here is where we check the CRS and confirm they're compatible.
   spdf <- checkCRS(veloxRaster, spdf)
@@ -363,8 +356,14 @@ extract_velox_gps <- function(veloxRaster, spdf, varsToKeep = NULL){
     extractLoop[[i]] <- veloxLoop[[1]]$extract_points(spdf)
   }
   
-  # return both the extracted values and the spdf of data so I can easily combine them again later.
-  return(list(extractLoop, spdf))
+  # map the metaDf to the list so that I know the values of each extracted value. Keep this long?
+  
+  extractDf <- do.call(cbind, extractLoop)
+  
+  fullDf <- cbind(spdf@data, extractDf)
+  
+  # return the combined meta data and the extracted values
+  return(fullDf)
   
 }
 
@@ -385,11 +384,13 @@ This will use the second list element from the `convert_to_velox` function to id
 ```{r}
 fullerTest <- convert_to_velox(subsetYearMonth(arcWeatherRaw, 1987, 11))
 
-
+fullerTest2 <- extract_velox_gps(fullerTest[[1]],siteSp)
 ```
 
 
 # Appendix
+
+**Velox notes:**
 
 Investigate the `oafoperatingarea` object. I want this to have a matrix for each day for each location which means that it'll be a very long list of matrices. I think I really just want to create a big velox stack and extract the points I want taking the mean of that object. That should be manageable.
 
