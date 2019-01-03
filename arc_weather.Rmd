@@ -71,12 +71,15 @@ rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
 # this only runs if forceUpate is TRUE
 if(!file.exists(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/")) & forceUpdate){
   load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/")) # this is huge! Find a way to break this down to simplify calculations. 
-  
+} 
+
+mandelaUpdate <- FALSE
+if(mandelaUpdate){
   ## toy data for practicing
   toyData <- arcWeatherRaw[1:100]
 
   saveRDS(toyData, file = paste(rawDir, "toyData.rds", sep = "/"))
-} 
+}
 
 ```
 
@@ -201,12 +204,6 @@ checkSize <- function(obj, unit){
 
 format(object.size(veloxLoop), units = "Kb") # much smaller!
 ```
-
-# Extract and aggregate with `velox`
-
-
-
-## Functions
 
 * Subset by year - subset the raster list by year 
 * Subset by month - subset the raster list by month
