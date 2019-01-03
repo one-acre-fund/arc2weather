@@ -262,7 +262,7 @@ dateDfCreator <- function(dateVector){
   month = as.numeric(substr(numbers, 5, 6))
   day = as.numeric(substr(numbers, 7, 8))
   
-  return(data.frame(year, month, day))
+  return(data.frame(numbers, year, month, day))
 }
 
 
@@ -325,7 +325,7 @@ checkCRS <- function(veloxRasterList, spdf){
   
   crsFormatCheck <- veloxRasterList[[1]]$crs == proj4string(spdf)
   if(!crsFormatCheck){
-    spdf <- spTransform(spdf, CRS(veloxRaster[[1]]$crs))
+    spdf <- spTransform(spdf, CRS(veloxRasterList[[1]]$crs))
   }
 }
 
@@ -336,22 +336,32 @@ extract_velox_gps <- function(veloxRaster, spdf){
   # Takes a list of velox raster and extracts the right data points
   # output: a list with two elements: the first element is a df of the extracted values for the given gps points. 
   #The second list is the df of GPS points to later merge with those GPS points for the final output.
+  veloxLoop <- veloxRaster[[1]]
   
   ## here is where we check the CRS and confirm they're compatible.
-  spdf <- checkCRS(veloxRaster, spdf)
+  checkCRS(veloxLoop, spdf)
   
   ## here is where we extract the values for the given GPS values.
   extractLoop <- list()
   for(i in seq_along(veloxLoop)){
-    extractLoop[[i]] <- veloxLoop[[1]]$extract_points(spdf)
+    extractLoop[[i]] <- veloxLoop[[i]]$extract_points(spdf)
+    extractLoop[[i]] <- as.data.frame(extractLoop[[i]])
   }
   
   # map the metaDf to the list so that I know the values of each extracted value. Keep this long?
-  # ***** this is where I need to come back and figure out how to combine the labels with the extracted data so I can aggregate easily!
+ # extract loop has # of elements equal to the dates and each element is the length of the GPS points. I therefore want to combine dates with each element.
+  # convert spdf@data into equal length list for easy mapping
+  spdfList <- rep(list(spdf@data), nrow(extractLoop[[1]]))
   
-  extractDf <- do.call(cbind, extractLoop)
+  # combine gps points with extracted values
+  dateList <- Map(cbind, spdfList, extractLoop)
   
-  fullDf <- cbind(spdf@data, extractDf)
+  #combine date labels with the gps points and extracted values so the data can be aggregated as desired based on dates
+  fullDfList <- Map(cbind, split(veloxRaster[[2]], veloxRaster[[2]]$numbers), dateList)
+  
+  fullDf <- plyr::rbind.fill(fullDfList)
+  
+  names(fullDf)[names(fullDf) == "V1"] <- "rainfall"
   
   # return the combined meta data and the extracted values
   return(fullDf)
@@ -363,21 +373,11 @@ extract_velox_gps <- function(veloxRaster, spdf){
 ```{r}
 test <- subsetYear(arcWeatherRaw, 1985)
 
-test2 <- convert_to_velox(test)
+veloxRaster <- convert_to_velox(test)
+spdf = siteSp
 
 test3 <- oafTrim(test2[[1]])
 ```
-
-## Aggregation function
-
-This will use the second list element from the `convert_to_velox` function to identify how to aggregate the velox list.
-
-```{r}
-fullerTest <- convert_to_velox(subsetYearMonth(arcWeatherRaw, 1987, 11))
-
-fullerTest2 <- extract_velox_gps(fullerTest[[1]],siteSp)
-```
-
 
 # Appendix
 
