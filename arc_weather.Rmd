@@ -68,10 +68,9 @@ dataDir <- normalizePath(file.path("..", "arc2_weather_data"))
 
 rawDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
 
-# this only runs if forceUpate is TRUE
-if(!file.exists(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/")) & forceUpdate){
-  load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/")) # this is huge! Find a way to break this down to simplify calculations. 
-} 
+# this unfortunately just takes a while to load. 
+load(paste(rawDir, "rdata_file", "weatherRasterList.Rdata", sep = "/")) # this is huge! 
+
 
 mandelaUpdate <- FALSE
 if(mandelaUpdate){
@@ -165,36 +164,30 @@ oafAreaReproject <- spTransform(oafArea, CRS("+proj=longlat +a=6371000 +b=637100
 
 There's a limit to how many seasons I can combine. I want to aggregate the data so that it's easy to get the full picture or any relevant subsets What rules should I follow for determining which subsets to make? For now I should just make the long term average >> and set this us to easily update as we get more data.
 
-**HOW TO HANDLE THE LARGE AMOUNT OF DATA** subset the rasters (in groups if need be) to just the areas we're interested in. For the purposes of updating the data going forward, we'll create decade long groupings which should be manageable for extracting values and then summarizing them
+**HOW TO HANDLE THE LARGE AMOUNT OF DATA** subset the rasters (in groups if need be) to just the areas we're interested in. For the purposes of updating the data going forward, we'll create decade long groupings which should be manageable for extracting values and then summarizing them.
+
+> I'm assuming that the key use cases are feeding in a set of GPS points and getting back an aggregated calculation. 
 
 There are a couple steps I want to follow:
 
 * The `arcWeatherRaw.Rdata` file is large. I don't want to be working with that format. I want to use `velox` to speed up the calculations.
 * When I switch to `velox` however, I loose the easier labels of a data.frame object. I need to therefore know what I want to do to the data before putting it into `velox` format I so get back exactly what I want.
 * This likely involves creating the set of functions that can subset the `arcWeatherRaw` data:
-  + down to the DATES I need
-  + storing those lables
+  + down to the DATES I need (using `subsetYear`, `subsetMonth`, `subsetYearMonth`)
+  + storing those labels
   + converting the data to velox to trim it down
   + extract GPS points
     + make sure those GPS points are in the right CRS!
   + aggregate the data as I need
   + convert the labels accordingly and match it back with the aggregated velox data.
-
-```{r}
-if(!file.exists(paste(dataDir, "veloxLoop.rds", sep = "/")) | forceUpdate){
-  veloxLoop <- list()
-  for(i in seq_along(arcWeatherRaw)){
-    tmp <- velox(arcWeatherRaw[[i]])
-    tmp$crop(oafAreaReproject)
-    veloxLoop[[i]] <- tmp
-    
-  }
-  saveRDS(veloxLoop, file=paste(dataDir, "veloxLoop.rds", sep = "/"))
   
-} else {
-  veloxLoop <- readRDS(paste(dataDir, "veloxLoop.rds", sep = "/"))
-}
-```
+I'll end up with some nested functions that will, in order:
+
+* Subset the data to the dates of interest
+* Convert to `velox`.
+* Crop to OAF countries (or is there a way to do this earlier?)
+* Extract the GPS points of interest.
+
 
 ```{r}
 ## check the size of this file to see if we've made our problem a bit more manageable
@@ -204,6 +197,8 @@ checkSize <- function(obj, unit){
 
 format(object.size(veloxLoop), units = "Kb") # much smaller!
 ```
+
+## Functions to subset
 
 * Subset by year - subset the raster list by year 
 * Subset by month - subset the raster list by month
@@ -255,13 +250,82 @@ subsetYearMonth <- function(rList, year, month){
 }
 
 #test <- subsetYearMonth(arcWeatherRaw, 1983, 1)
+```
+
+## Functions to convert to `velox`
+
+```{r}
+convert_to_velox <- function(rList){
+  # input: takes the subset data and convets to velox. Works with list input
+  # output: a list of velox rasters for additional manipulation
+    veloxLoop <- list()
+    for(i in seq_along(rList)){
+      tmp <- velox(rList[[i]])
+      #tmp$crop(oafAreaReproject)
+      veloxLoop[[i]] <- tmp
+    }
+    return(veloxLoop)
+}
+
+oafTrim <- function(veloxObj){
+  # input: list of velox raster
+  # output: list of velox raster trimmed to the OAF extent to simplify the calculations to come. 
+  # notes: This step might be unncessary? In that case we can probably pretty easily remove it from the sequence.
+    for(i in seq_along(veloxObj)){
+      veloxObj[[i]]$crop(oafAreaReproject)
+    }
+    return(veloxObj)
+}
+```
+
+```{r}
+test <- subsetYear(arcWeatherRaw, 1985)
+
+test2 <- convert_to_velox(test)
+
+test3 <- oafTrim(test2)
+```
+
+
+```{r}
+checkCRS <- function(veloxRasterList, spdf){
+  # inputs: a veloxRasterList and a spdf of GPS points. We'll work with the first element of the VeloxRaster after checking that all are the same CRS.
+  # outputs: spdf in the right format if it needs to be transformed
+  # notes: This should only be run once for the entire operation and thus it should be done before entering the extraction phase.
+  if(class(veloxRasterList[[1]])!="VeloxRaster"){
+    stop("\n veloxRaster object needs to be a velox object. First convert to Velox")
+  }
+  
+  if(class(spdf)!="SpatialPointsDataFrame"){
+    stop("\n spdf object not a SpatialPointsDataFrame. First convert to SPDF using sp package")
+  }
+  
+  # check if the CRS are already the same. If not convert the SPDF to the velox raster format and report what the format is. This assumes that the veloxRaster all have the CRS which they should because the ARC 2 weather data should. Maybe this is a bad assumption though!
+  
+  # first check that velox raster list are all the same CRS
+  veloxCrs <- lapply(veloxRasterList, function(x){x$crs})
+  veloxCrsCheck <- length(unique(veloxCrs)) == 1
+  
+  if(!veloxCrsCheck){
+    stop("\n VeloxRaster object has different CRS. Check this before proceeding")
+  }
+  
+  
+  crsFormatCheck <- veloxRasterList[[1]]$crs == proj4string(spdf)
+  if(!crsFormatCheck){
+    spdf <- spTransform(spdf, CRS(veloxRaster$crs))
+    return(spdf)
+  }
+}
 
 
 ## function for extracting points and adding in labels
-extract_label <- function(veloxRaster, spdf, varsToKeep = NULL){
-  # input: v$extract_points(siteReproject) style code
-  # output: additional labels in the matrices that add labels from the spdf into the data.
-  # you'd use this when you don't need the velox capacity anymore as this transforms the data from velox into df.
+extract_velox_gps <- function(veloxRaster, spdf, varsToKeep = NULL){
+  # input: v$extract_points(siteReproject) style code. 
+  # Takes a list of velox raster and extracts the right data points
+  # output: a list with two elements: the first element is a list of velox rater values for the given gps points. The second list is the df of GPS points to later merge with those GPS points for the final output.
+  
+  # This checks which variables we want to keep from the spdf and keep those for future manipulation
   if(is.null(varsToKeep)){
     return(cbind(spdf@data, veloxRaster))
   } else {
@@ -269,14 +333,22 @@ extract_label <- function(veloxRaster, spdf, varsToKeep = NULL){
            dplyr::select(one_of(varsToKeep)))
   }
   
+  ## here is where we check the CRS and confirm they're compatible.
+  spdf <- checkCRS(veloxRaster, spdf)
+  
+  ## here is where we extrac the values for the given GPS values.
+  
+  extractLoop <- list()
+  for(i in seq_along(veloxLoop)){
+    v <- veloxLoop[[i]]
+    extractLoop[[i]] <- v$extract_points(siteReproject)
+    extractLoop[[i]] <- extract_label(extractLoop[[i]], siteReproject)
+  }
+  
+  
 }
 
-extractLoop <- list()
-for(i in seq_along(veloxLoop)){
-  v <- veloxLoop[[i]]
-  extractLoop[[i]] <- v$extract_points(siteReproject)
-  extractLoop[[i]] <- extract_label(extractLoop[[i]], siteReproject)
-}
+
 
 ```
 
