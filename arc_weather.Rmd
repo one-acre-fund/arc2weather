@@ -286,7 +286,7 @@ if(mandelaUpdate){
 
 ```
 
-## Kenya shapefile
+## Kenya GPS
 
 ```{r}
 # import the Kenya shapefile, focus on western Kenya and then subset for certain years
@@ -323,8 +323,11 @@ I additionally want to subset this down to just western Kenya because it's too c
 
 I suggest we use the weather data crs to avoid having lots of intensive reprojection
 
-```{r}
+```{r, eval=FALSE}
 siteReproject <- spTransform(siteSp, CRS("+proj=longlat +a=6371000 +b=6371000 +no_defs"))
+```
+
+```{r}
 boundaryReproject <- spTransform(keBoundaries, CRS("+proj=longlat +a=6371000 +b=6371000 +no_defs"))
 
 weatherMap <- intersect(boundaryReproject, siteReproject)
