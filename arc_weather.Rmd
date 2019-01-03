@@ -357,6 +357,7 @@ extract_velox_gps <- function(veloxRaster, spdf){
   }
   
   # map the metaDf to the list so that I know the values of each extracted value. Keep this long?
+  # ***** this is where I need to come back and figure out how to combine the labels with the extracted data so I can aggregate easily!
   
   extractDf <- do.call(cbind, extractLoop)
   
