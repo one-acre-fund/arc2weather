@@ -220,9 +220,10 @@ convertSpdf <- function(df, lat = NULL, long = NULL, defaultCRS = NULL){
     return(converted)
   }
   
-  
 }
 
+
+test <- 
 
 
 alignCRS <- function(veloxRasterList, spdf){
@@ -337,8 +338,9 @@ readGpsFiles <- lapply(siteGpsFiles, function(x){
 
 combineGpsFiles <- as.data.frame(do.call(rbind, readGpsFiles))
 
-# investigate the projection of these data points
-siteSp <- SpatialPointsDataFrame(coords = combineGpsFiles[,c("Longitude", "Latitude")], data = combineGpsFiles, proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")) # use this to get the right map for N and P
+# test convert function:
+#test <- convertSpdf(combineGpsFiles, "Longitude", "Latitude")
+siteSp <- convertSpdf(combineGpsFiles, "Longitude", "Latitude")
 
 if(!file.exists(paste0(dataDir, "/GADM_2.8_KEN_adm2.rds"))){
   keBoundaries <- getData("GADM", country='KE', level=2, path = dataDir) 
