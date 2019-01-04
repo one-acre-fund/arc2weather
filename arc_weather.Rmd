@@ -79,7 +79,16 @@ I'll end up with some nested functions that will, in order:
 * Crop to OAF countries (or is there a way to do this earlier?)
 * Extract the GPS points of interest.
 
+1/3/19 - Now that the functions are working I want to test that the set up will work with data coming in from the warehouse. This probably means:
+
+* having to identify or assign CRS to data from the warehouse wihtout it
+* work with different variable names of labels and ids. I want to be indifferent to the incoming labels. (I think we are).
+* Test how to set up this system with Mandela!
+
+
 ## Functions to subset
+
+> These aren't needed anymore!
 
 * Subset by year - subset the raster list by year 
 * Subset by month - subset the raster list by month
@@ -135,8 +144,8 @@ subsetYearMonth <- function(rList, year, month){
   
 }
 
-test <- subsetYearMonth(arcWeatherRaw, 1987, 11)
-test <- subsetYear(arcWeatherRaw, 1987)
+# test <- subsetYearMonth(arcWeatherRaw, 1987, 11)
+# test <- subsetYear(arcWeatherRaw, 1987)
 
 ```
 
@@ -190,16 +199,41 @@ oafTrim <- function(veloxObj){
 }
 ```
 
+## Functions to extract data
+
 ```{r}
-checkCRS <- function(veloxRasterList, spdf){
+convertSpdf <- function(df, lat = NULL, long = NULL, defaultCRS = NULL){
+  # input: a data frame that may or not be a spdf. If it's not an spdf, convert to spdf and give it a default CRS. 
+  # output: spdf with a CRS ready to be converted to the CRS to match the veloxRaster data
+  
+  if(class(df) == "SpatialPointsDataFrame"){
+    return(df)
+  } 
+  
+  if(class(df) == "data.frame" && is.null(defaultCRS)) {
+    converted <- SpatialPointsDataFrame(coords = df[,c(long, lat)], data = df, proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
+    return(converted)
+  }
+  
+  if(class(df) == "data.frame" && !is.null(defaultCRS)){
+    converted <- SpatialPointsDataFrame(coords = df[,c(long, lat)], data = df, proj4string = CRS(defaultCRS))
+    return(converted)
+  }
+  
+  
+}
+
+
+
+alignCRS <- function(veloxRasterList, spdf){
   # inputs: a veloxRasterList and a spdf of GPS points. We'll work with the first element of the VeloxRaster after checking that all are the same CRS.
   # outputs: spdf in the right format if it needs to be transformed
   # notes: This should only be run once for the entire operation and thus it should be done before entering the extraction phase.
-  if(class(veloxRasterList[[1]])!="VeloxRaster"){
+  if(class(veloxRasterList[[1]]) != "VeloxRaster"){
     stop("\n veloxRaster object needs to be a velox object. First convert to Velox")
   }
   
-  if(class(spdf)!="SpatialPointsDataFrame"){
+  if(class(spdf) != "SpatialPointsDataFrame"){
     stop("\n spdf object not a SpatialPointsDataFrame. First convert to SPDF using sp package")
   }
   
@@ -261,7 +295,7 @@ extract_velox_gps <- function(veloxRaster, spdf){
 
 ```
 
-# Testing set up
+# Testing functions
 
 ## Data
 
@@ -323,7 +357,7 @@ I additionally want to subset this down to just western Kenya because it's too c
 
 I suggest we use the weather data crs to avoid having lots of intensive reprojection
 
-```{r, eval=FALSE}
+```{r}
 siteReproject <- spTransform(siteSp, CRS("+proj=longlat +a=6371000 +b=6371000 +no_defs"))
 ```
 
@@ -375,7 +409,7 @@ spdf = siteSp
 test3 <- oafTrim(test2[[1]])
 ```
 
-# Appendix
+# Velox notes - appendix
 
 **Velox notes:**
 
