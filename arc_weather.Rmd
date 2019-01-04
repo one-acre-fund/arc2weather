@@ -399,6 +399,14 @@ spdf = siteSp
 test3 <- oafTrim(test2[[1]])
 ```
 
+# Full workflow
+
+* import df.
+* convert to spdf.
+* align CRS.
+* extract the data for the points in the spdf.
+* prep data for inport into warehouse so that it can be summarized as desired.
+
 # Velox notes - appendix
 
 **Velox notes:**
