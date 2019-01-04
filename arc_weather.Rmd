@@ -308,6 +308,9 @@ test3 <- oafTrim(test2[[1]])
 veloxRaster <- convert_to_velox(subsetYear(arcWeatherRaw, 1989))
 spdf <- convertSpdf(combineGpsFiles, "Longitude", "Latitude")
 
+
+test <- extract_velox_gps(veloxRaster, spdf)
+table(test$rainfall)
 ```
 
 
@@ -326,6 +329,24 @@ tidyArcWeatherData <- function(df){
   return(clean)
   
 }
+```
+
+
+## Function for full extract
+
+```{r}
+extractWeatherData <- function(rawData, 
+                               yearRange = NULL, 
+                               monthRange = NULL, 
+                               gpsFile, 
+                               latCol, 
+                               lonCol){
+  if(is.null(yearRange) && is.null(monthRange)){
+    stop("\n Please provide either a year or a month input for query")
+  }
+  
+  
+                               }
 ```
 
 
@@ -435,7 +456,13 @@ Start with `combineGpsFiles` and `arcWeatherRaw` and get to dataset with extract
 **For some reason I'm only getting Nas when I run this as a set of functions. Come back and check this**
 
 ```{r}
-datExport <- extract_velox_gps(oafTrim(convert_to_velox(subsetYear(arcWeatherRaw, 1989))), convertSpdf(combineGpsFiles, "Longitude", "Latitude"))
+datExport <- extract_velox_gps(veloxRaster = convert_to_velox(subsetYear(arcWeatherRaw, 1989)), spdf = convertSpdf(combineGpsFiles, "Longitude", "Latitude"))
+
+
+#table(datExport$rainfall)
+```
+
+```{r}
 
 ```
 
