@@ -359,18 +359,12 @@ tidyArcWeatherData <- function(df){
 
 ```{r}
 extractWeatherData <- function(rawData, 
-                               yearRange = NULL, 
-                               monthRange = NULL, 
                                gpsFile, 
                                latCol, 
                                lonCol){
   
-  if(is.null(yearRange) && is.null(monthRange)){
-    stop("\n Please provide either a year or a month input for query")
-  }
-  
   datExtract <- extract_velox_gps(
-    veloxRaster = convert_to_velox(subsetYearMonth(rawData, yearRange, monthRange)), 
+    veloxRaster = convert_to_velox(rawData), 
     spdf = convertSpdf(gpsFile, lonCol, latCol))
   
   return(datExtract)
@@ -484,14 +478,16 @@ Start with `combineGpsFiles` and `arcWeatherRaw` and get to dataset with extract
 **For some reason I'm only getting Nas when I run this as a set of functions. Come back and check this**
 
 ```{r}
-datExport <- extract_velox_gps(veloxRaster = convert_to_velox(subsetYear(arcWeatherRaw, 1989)), spdf = convertSpdf(combineGpsFiles, "Longitude", "Latitude"))
+datExport <- extract_velox_gps(veloxRaster = convert_to_velox(arcWeatherRaw), spdf = convertSpdf(combineGpsFiles, "Longitude", "Latitude"))
 
 
 #table(datExport$rainfall)
 ```
 
+I'm giving up on subsetting the data in the function and propose that we instead extract for all available dates and filter in SQL. The downside is that it'll take longer to run. We can always feed in the subset functions but not make them required.
+
 ```{r}
-output <- extractWeatherData(arcWeatherRaw, yearRange = 1989, combineGpsFiles, latCol = "Latitude", lonCol = "Longitude")
+output <- extractWeatherData(subsetYear(arcWeatherRaw, 1989), combineGpsFiles, latCol = "Latitude", lonCol = "Longitude")
 ```
 
 
