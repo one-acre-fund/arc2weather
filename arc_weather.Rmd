@@ -334,6 +334,8 @@ tidyArcWeatherData <- function(df){
 
 ## Function for full extract
 
+**Come back and add in year and month filters**
+
 ```{r}
 extractWeatherData <- function(rawData, 
                                yearRange = NULL, 
@@ -345,7 +347,9 @@ extractWeatherData <- function(rawData,
     stop("\n Please provide either a year or a month input for query")
   }
   
+  datExport <- extract_velox_gps(veloxRaster = convert_to_velox(rawData), spdf = convertSpdf(gpsFile, lonCol, latCol))
   
+  return(datExport)
                                }
 ```
 
@@ -463,7 +467,7 @@ datExport <- extract_velox_gps(veloxRaster = convert_to_velox(subsetYear(arcWeat
 ```
 
 ```{r}
-
+output <- extractWeatherData(arcWeatherRaw, combineGpsFiles, "Latitude", "Longitude")
 ```
 
 
