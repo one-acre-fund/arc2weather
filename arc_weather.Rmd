@@ -357,18 +357,6 @@ I additionally want to subset this down to just western Kenya because it's too c
 * original crs for ke boundaries = +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0
 * original crs for weather data = +proj=longlat +a=6371000 +b=6371000 +no_defs
 
-I suggest we use the weather data crs to avoid having lots of intensive reprojection
-
-```{r}
-siteReproject <- spTransform(siteSp, CRS("+proj=longlat +a=6371000 +b=6371000 +no_defs"))
-```
-
-```{r}
-boundaryReproject <- spTransform(keBoundaries, CRS("+proj=longlat +a=6371000 +b=6371000 +no_defs"))
-
-weatherMap <- intersect(boundaryReproject, siteReproject)
-```
-
 I'm still not really sure what the most expendient way is to get the data we need. I think the best sequence will be extracting the points and then subsetting down by years or months as need be depending on the use case and aggregation
 
 This means I need a full list of gps across all countries in the right CRS. I then can subset down to just the countries I need to make the data smaller. This is hopefully small enough that I can then extract the points I need from a complete brick and then perform the right aggregations by season, year, and month.
