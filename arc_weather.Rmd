@@ -188,12 +188,12 @@ convert_to_velox <- function(rList){
 
 
 oafTrim <- function(veloxObj){
-  # input: list of velox raster but use the first element of the object
+  # input: list of velox raster but use the first element of the object. The input will be a list of two elements with the first elemetn being the list we want to iterate over.
   # output: list of velox raster trimmed to the OAF extent to simplify the calculations to come. 
   # notes: This step might be unncessary? In that case we can probably pretty easily remove it from the sequence.
   
-    for(i in seq_along(veloxObj)){
-      veloxObj[[i]]$crop(oafAreaReproject)
+    for(i in seq_along(veloxObj[[1]])){
+      veloxObj[[1]][[i]]$crop(oafAreaReproject)
     }
     return(veloxObj)
 }
@@ -223,7 +223,7 @@ convertSpdf <- function(df, lat = NULL, long = NULL, defaultCRS = NULL){
 }
 
 
-test <- 
+#test <- 
 
 
 alignCRS <- function(veloxRasterList, spdf){
@@ -265,7 +265,7 @@ extract_velox_gps <- function(veloxRaster, spdf){
   veloxLoop <- veloxRaster[[1]]
   
   ## here is where we check the CRS and confirm they're compatible.
-  checkCRS(veloxLoop, spdf)
+  alignCRS(veloxLoop, spdf)
   
   ## here is where we extract the values for the given GPS values.
   extractLoop <- list()
@@ -295,6 +295,24 @@ extract_velox_gps <- function(veloxRaster, spdf){
 }
 
 ```
+
+## Functions to tidy up data
+
+```{r}
+tidyArcWeatherData <- function(df){
+  
+  if(class(df) != "data.frame"){
+    stop("\n tidy function wants a data frame as input!")
+  }
+  
+  clean <- df %>%
+    mutate(rainfall = ifelse(rainfall == -999, NA, rainfall))
+  
+  return(clean)
+  
+}
+```
+
 
 # Testing functions
 
@@ -349,7 +367,7 @@ if(!file.exists(paste0(dataDir, "/GADM_2.8_KEN_adm2.rds"))){
 }
 ```
 
-## Align CRS
+## 1AF boundaries
 
 I additionally want to subset this down to just western Kenya because it's too computationally intentsive to run these calculations for other areas. I'm going to subset the shape file to just western Kenya and the plot it to confirm I've done it correctly. 
 
@@ -406,6 +424,15 @@ test3 <- oafTrim(test2[[1]])
 * align CRS.
 * extract the data for the points in the spdf.
 * prep data for inport into warehouse so that it can be summarized as desired.
+
+Start with `combineGpsFiles` and `arcWeatherRaw` and get to dataset with extracted values and labels. This is what we'd send back to a table in the data warehouse for aggregation as we need to combine with other 
+
+```{r}
+datExport <- tidyArcWeatherData(extract_velox_gps(oafTrim(convert_to_velox(subsetYear(arcWeatherRaw, 1985))), convertSpdf(combineGpsFiles, "Longitude", "Latitude")))
+
+
+```
+
 
 # Velox notes - appendix
 
