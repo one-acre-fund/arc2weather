@@ -285,16 +285,31 @@ extract_velox_gps <- function(veloxRaster, spdf){
   #combine date labels with the gps points and extracted values so the data can be aggregated as desired based on dates
   fullDfList <- Map(cbind, split(veloxRaster[[2]], veloxRaster[[2]]$numbers), dateList)
   
-  fullDf <- plyr::rbind.fill(fullDfList)
-  
-  names(fullDf)[names(fullDf) == "V1"] <- "rainfall"
-  
+  fullDf <- plyr::rbind.fill(fullDfList) %>%
+    rename(rainfall = V1)
+
   # return the combined meta data and the extracted values
   return(fullDf)
   
 }
 
 ```
+
+
+```{r, eval=FALSE}
+test <- subsetYear(arcWeatherRaw, 1985)
+
+veloxRaster <- convert_to_velox(test)
+spdf = siteSp
+
+test3 <- oafTrim(test2[[1]])
+
+# run these through the function
+veloxRaster <- convert_to_velox(subsetYear(arcWeatherRaw, 1989))
+spdf <- convertSpdf(combineGpsFiles, "Longitude", "Latitude")
+
+```
+
 
 ## Functions to tidy up data
 
@@ -306,7 +321,7 @@ tidyArcWeatherData <- function(df){
   }
   
   clean <- df %>%
-    mutate(rainfall = ifelse(rainfall == -999, NA, rainfall))
+    mutate(rainfall = ifelse(rainfall < 0, NA, rainfall))
   
   return(clean)
   
@@ -407,16 +422,6 @@ oafArea <- do.call(bind, lapply(gadmFiles, function(x){readRDS(x)}))
 # this is what I now what to use to subset the large and unwieldy weather data, by decade or year if need be. use velox to speed this up!
 oafAreaReproject <- spTransform(oafArea, CRS("+proj=longlat +a=6371000 +b=6371000 +no_defs"))
 ```
-
-```{r}
-test <- subsetYear(arcWeatherRaw, 1985)
-
-veloxRaster <- convert_to_velox(test)
-spdf = siteSp
-
-test3 <- oafTrim(test2[[1]])
-```
-
 # Full workflow
 
 * import df.
@@ -428,8 +433,7 @@ test3 <- oafTrim(test2[[1]])
 Start with `combineGpsFiles` and `arcWeatherRaw` and get to dataset with extracted values and labels. This is what we'd send back to a table in the data warehouse for aggregation as we need to combine with other 
 
 ```{r}
-datExport <- tidyArcWeatherData(extract_velox_gps(oafTrim(convert_to_velox(subsetYear(arcWeatherRaw, 1985))), convertSpdf(combineGpsFiles, "Longitude", "Latitude")))
-
+datExport <- extract_velox_gps(oafTrim(convert_to_velox(subsetYear(arcWeatherRaw, 1989))), convertSpdf(combineGpsFiles, "Longitude", "Latitude"))
 
 ```
 
