@@ -432,6 +432,8 @@ oafAreaReproject <- spTransform(oafArea, CRS("+proj=longlat +a=6371000 +b=637100
 
 Start with `combineGpsFiles` and `arcWeatherRaw` and get to dataset with extracted values and labels. This is what we'd send back to a table in the data warehouse for aggregation as we need to combine with other 
 
+**For some reason I'm only getting Nas when I run this as a set of functions. Come back and check this**
+
 ```{r}
 datExport <- extract_velox_gps(oafTrim(convert_to_velox(subsetYear(arcWeatherRaw, 1989))), convertSpdf(combineGpsFiles, "Longitude", "Latitude"))
 
