@@ -34,6 +34,8 @@ r <- raster("africa_arc.20180527.tif")
 
 #head(tbl)
 
+forceUpdate <- FALSE
+
 ### full list
 url <- "ftp://ftp.cpc.ncep.noaa.gov/fews/fewsdata/africa/arc2/bin/"
 h = new_handle(dirlistonly=TRUE)
@@ -50,7 +52,7 @@ if(!file.exists("initialDatePull.Rdata") || forceUpdate) {
   close(con)
   
   load("initialDatePull.Rdata")
-  updatedList = updatedList[!updatedList$V1 %in% fullList$V1]
+  updatedList = updatedList[!updatedList$V1 %in% fullList$V1,]
   
   
 }
@@ -88,8 +90,10 @@ if(exists("updatedList")){
 }
 
 
-urls =  paste0(url, listToAccess[,1])
+urls =  paste0(url, listToAccess)
 #fls = basename(urls)
+
+# then download those urls
   
 arcWeatherRaw <- lapply(urls, function(fileLocation){
   print(basename(fileLocation))
@@ -97,8 +101,31 @@ arcWeatherRaw <- lapply(urls, function(fileLocation){
   return(raw)
   
 })
-  
+
+todayDate <- format(Sys.time(), "%Y-%m-%d")
+
 #### saved dated arcWeatherRaw file so that I can steadily create an updated raster brick
-save(arcWeatherRaw, file="weatherRasterList.Rdata")
+saveRDS(arcWeatherRaw, file=paste("weatherRasterList", todayDate, ".rds", sep = ""))
+
+
+# and add them to the existing data
+dataDir <- normalizePath(file.path("..", "arc2_weather_data", "raw_data", "rdata_file"))
+
+fileList <- list.files(dataDir, pattern = "weatherRasterList")
+
+
+# read them all in, put them together, and order them. I will eventually just
+# want to download the latest and add them to the existing rather than importing
+# lots of segments
+finalDf <- NULL
+
+for(i in seq_along(fileList)){
+  load(paste(dataDir, fileList[i], sep = "/"))
+  finalDf <- 
+}
+
+
+
+  
 
 
