@@ -117,6 +117,11 @@ subsetYear <- function(rList, year){
 subsetMonth <- function(rList, month){
   # input - list of weather rasters and month as numeric month
   # output - list of rasters corresopnding to that month
+  if(month > 12 || month < 1){
+    stop("\n Not a valid month number. Please enter a number between 1 and 12")
+  }
+  
+  
   if(month < 9){
     month = as.character(paste0(0, month))
   } else {
@@ -139,8 +144,17 @@ subsetMonth <- function(rList, month){
 }
 
 # I can now use these funcitons in concert to get data from a specific year and month
-subsetYearMonth <- function(rList, year, month){
-  return(subsetYear(subsetMonth(rList, month), year))
+subsetYearMonth <- function(rList, year = NULL, month = NULL){
+  
+  if(is.null(year) && is.null(month)){
+    stop("\n Please provide either a year or a month value!")
+  } else if (is.null(year) && !is.null(month)){
+    return(subsetMonth(rList, month))
+  } else if (is.null(month) && !is.null(year)){
+    return(subsetYear(rList, year))
+  } else {
+    return(subsetYear(subsetMonth(rList, month), year))
+  }
   
 }
 
@@ -148,6 +162,13 @@ subsetYearMonth <- function(rList, year, month){
 # test <- subsetYear(arcWeatherRaw, 1987)
 
 ```
+
+```{r, eval=FALSE}
+test <- subsetYearMonth(arcWeatherRaw, 1987)
+#test <- subsetYear(arcWeatherRaw, 1987)
+
+```
+
 
 ## Functions to convert to `velox`
 
@@ -343,13 +364,16 @@ extractWeatherData <- function(rawData,
                                gpsFile, 
                                latCol, 
                                lonCol){
+  
   if(is.null(yearRange) && is.null(monthRange)){
     stop("\n Please provide either a year or a month input for query")
   }
   
-  datExport <- extract_velox_gps(veloxRaster = convert_to_velox(rawData), spdf = convertSpdf(gpsFile, lonCol, latCol))
+  datExtract <- extract_velox_gps(
+    veloxRaster = convert_to_velox(subsetYearMonth(rawData, yearRange, monthRange)), 
+    spdf = convertSpdf(gpsFile, lonCol, latCol))
   
-  return(datExport)
+  return(datExtract)
                                }
 ```
 
@@ -467,7 +491,7 @@ datExport <- extract_velox_gps(veloxRaster = convert_to_velox(subsetYear(arcWeat
 ```
 
 ```{r}
-output <- extractWeatherData(arcWeatherRaw, combineGpsFiles, "Latitude", "Longitude")
+output <- extractWeatherData(arcWeatherRaw, yearRange = 1989, combineGpsFiles, latCol = "Latitude", lonCol = "Longitude")
 ```
 
 
