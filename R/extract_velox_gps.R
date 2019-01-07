@@ -4,8 +4,6 @@
 #' @param spdf A SpatialPointsDataFrame of the GPS for which we'll be extracting data from the velox raster.
 #' @return A data.frame that is long by date. It has the observation for each date and GPS point in the raster data.
 #' @examples
-#' add(1, 1)
-#' add(10, 1)
 
 extract_velox_gps <- function(veloxRaster, spdf){
   # input: v$extract_points(siteReproject) style code.
