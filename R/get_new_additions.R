@@ -15,7 +15,7 @@ get_new_additions <- function(existingList, fullList, directory){
   names(updatedList) = "V1"
 
   # this saves the list for next time
-  saveRDS(updatedList, file = paste(directory, paste("files_downloaded_", todayDate, ".rds", sep = ""), sep = "/"))
+  saveRDS(updatedList, file = paste(directory, paste("files_downloaded_", todayDate(), ".rds", sep = ""), sep = "/"))
 
 
   return(updatedList)
