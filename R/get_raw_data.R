@@ -7,7 +7,7 @@ get_raw_data <- function(listToAccess, url){
 
   newData <- lapply(urls, function(fileLocation){
     print(basename(fileLocation))
-    raw <- convertBinToRaster(readArcBinary(fileLocation), fileLocation)
+    raw <- convert_bin_to_raster(readArcBinary(fileLocation), fileLocation)
     return(raw)
   })
 
