@@ -5,10 +5,13 @@
 #' @return a list of rasters accessed from the FTP. Saves this file to the directory
 
 
-get_raw_data <- function(listToAccess, url){
+get_raw_data <- function(listToAccess, url = NULL){
   # input: list of files that we need to access to have up to date data
   # what it does: turns those into urls and then accesses the data
   # output: saves data to raw_data location
+  if(is.null(url)){
+    url = "ftp://ftp.cpc.ncep.noaa.gov/fews/fewsdata/africa/arc2/bin/"
+  }
 
   urls =  paste0(url, listToAccess)
 
