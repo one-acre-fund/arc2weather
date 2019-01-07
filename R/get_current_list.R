@@ -13,10 +13,10 @@ get_current_list <- function(fileDirectory = NULL){
     fileDirectory <- normalizePath(file.path("..", "arc2_weather_data", "access_lists"))
   }
 
-  listFiles <- list.files(fileDirectory, pattern = "files_downloaded")
-  latest <- sort(listFiles)[1]
+  # listFiles <- list.files(fileDirectory, pattern = "files_downloaded")
+  # latest <- sort(listFiles)[length(listFiles)]
 
-  tmp <- readRDS(paste(fileDirectory, latest, sep = "/"))
+  tmp <- readRDS(paste(fileDirectory, "full_list.rds", sep = "/"))
   return(tmp)
 
 }
