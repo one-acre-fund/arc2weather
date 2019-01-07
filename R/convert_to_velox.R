@@ -1,8 +1,7 @@
 #' Make sure the velox raster and the GPS spdf have the same CRS
 #'
-#' @param veloxRasterList A list of raster in velox format.
-#' @param spdf A SpatialPointsDataFrame from the sp package.
-#' @return An spdf with the same format as the velox raster data.
+#' @param rList A list of raster in raster format.
+#' @return List of two elements - first is the raster data in velox format. Second are the labels needed to identify the data later.
 #' @examples
 #' add(1, 1)
 #' add(10, 1)
