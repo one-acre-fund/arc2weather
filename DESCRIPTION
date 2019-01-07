@@ -1,0 +1,21 @@
+Package: arc2weather
+Title: Downloads and Extracts ARC2 Weather Data 
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Matt",
+           family = "Lowes",
+           role = c("aut", "cre"),
+           email = "matt.lowes@oneacrefund.org")
+Description: This package downloads the latest ARC2 weather data and prepares the data for GPS point extraction. 
+        Those resulting data are then available for uses at One Acre Fund. This package handles the funcitons needed to download, organize, shape, extract, and 
+        merge the weather data points for entry into a SQL database. The package utilizes the velox package for faster raster manipulation.
+Imports: 
+    sp, 
+    rgdal, 
+    raster,
+    velox,
+    tidyverse
+License: What license it uses
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
