@@ -14,7 +14,8 @@ Imports:
     rgdal, 
     raster,
     velox,
-    tidyverse
+    tidyverse,
+    curl
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
