@@ -1,3 +1,11 @@
+#' reads in binary file from arc2 weather ftp
+#'
+#' @param fileUrl web location of ftp
+#' @return data.frame with the weather data
+#' @examples
+#' add(1, 1)
+#' add(10, 1)
+
 read_arc_binary <- function(fileUrl){
 
   ### this function gets ARC2 data from the ftp site and converts it to a raster
