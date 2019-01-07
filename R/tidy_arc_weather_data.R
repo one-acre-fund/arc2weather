@@ -14,7 +14,7 @@ tidy_arc_weather_data <- function(df){
   }
 
   clean <- df %>%
-    mutate(rainfall = ifelse(rainfall < 0, NA, rainfall))
+    dplyr::mutate(rainfall = ifelse(rainfall < 0, NA, rainfall))
 
   return(clean)
 
