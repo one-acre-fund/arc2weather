@@ -17,16 +17,14 @@ get_raw_data <- function(listToAccess, saveDirectory = NULL, url = NULL){
     saveDirectory <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
   }
 
-  todayDate <- format(Sys.time(), "%Y-%m-%d")
-
-  urls =  paste0(url, listToAccess)
+  urls =  paste0(url, as.vector(listToAccess$V1))
 
   newData <- lapply(urls, function(fileLocation){
     print(basename(fileLocation))
-    raw <- convert_bin_to_raster(readArcBinary(fileLocation), fileLocation)
+    raw <- convert_bin_to_raster(read_arc_binary(fileLocation), fileLocation)
     return(raw)
   })
 
-  saveRDS(newData, file = paste(saveDirectory, paste("weatherRasterList", todayDate, ".rds", sep = ""), sep = "/"))
+  saveRDS(newData, file = paste(saveDirectory, paste("weatherRasterList", todayDate(), ".rds", sep = ""), sep = "/"))
 
 }
