@@ -145,6 +145,13 @@ getNewAdditions <- function(existingList, fullList, directory){
 #assume that we've accessed everything through the most up to date file name in
 #the current file for next time
 
+arcWeatherRaw <- lapply(urls, function(fileLocation){
+  print(basename(fileLocation))
+  raw <- convertBinToRaster(readArcBinary(fileLocation), fileLocation)
+  return(raw)
+  
+})
+
 getRawData <- function(listToAccess, url){
   # input: list of files that we need to access to have up to date data
   # what it does: turns those into urls and then accesses the data
@@ -152,15 +159,29 @@ getRawData <- function(listToAccess, url){
   
   urls =  paste0(url, listToAccess)
   
+  newData <- lapply(urls, function(fileLocation){
+    print(basename(fileLocation))
+    raw <- convertBinToRaster(readArcBinary(fileLocation), fileLocation)
+    return(raw)
+  })
   
-  
-  print(basename(fileLocation))
-  raw <- convertBinToRaster(readArcBinary(fileLocation), fileLocation)
-  
-  saveRDS(raw, file = paste(rdsDir, paste("weatherRasterList", todayDate, ".rds", sep = ""), sep = "/"))
-  #return(raw)
+  saveRDS(newData, file = paste(rdsDir, paste("weatherRasterList", todayDate, ".rds", sep = ""), sep = "/"))
   
 }
+
+#### full functionality
+
+updateArcWeatherData <- function(url, dir){
+  
+  currentList <- getCurrentList(dir)
+  fullList <- getFullList(url)
+  
+  newAdditions <- getNewAdditions(currentList, fullList, dir)
+  
+  getRawData(newAdditions, url)
+  
+}
+
 
 
 
@@ -169,5 +190,8 @@ getRawData <- function(listToAccess, url){
 test1 <- getCurrentList(dir)
 test2 <- getFullList(url)
 test <- getNewAdditions(test1, test2, dir)
+
+
+
 
 
