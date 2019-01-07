@@ -13,6 +13,10 @@ convert_spdf <- function(df, lat = NULL, long = NULL, defaultCRS = NULL){
   # input: a data frame that may or not be a spdf. If it's not an spdf, convert to spdf and give it a default CRS.
   # output: spdf with a CRS ready to be converted to the CRS to match the veloxRaster data
 
+  if(is.null(lat) & is.null(long) & class(df)=="data.frame"){
+    stop("\n df is a data.frame. Please indicate the lat/lon variables.")
+  }
+
   if(class(df) == "SpatialPointsDataFrame"){
     return(df)
   }
