@@ -86,52 +86,70 @@ convertBinToRaster <- function(binaryInput, fileUrl){
 ### determine which files to access
 ### funciton to take the list of datd we have now, compare to what is available,
 ### and produce list of what we need to pull to have fully updated list
+dir <- normalizePath(file.path("..", "arc2_weather_data", "access_lists"))
+
 getFullList <- function(url){
+  # input: data location url
+  # output: full list of available data sets
   
   h = new_handle(dirlistonly=TRUE)
   con = curl(url, "r", h)
   fullList = read.table(con, stringsAsFactors=TRUE, fill=TRUE)
   close(con)
-  saveRDS(fullList, file=paste(fullList, todayDate, ".rds", sep = ""))
+  #saveRDS(fullList, file=paste(fullList, todayDate, ".rds", sep = ""))
+  return(fullList)
   
 }
 
-getCurrentList <- function(df){
-  # input: loads the current data 
+getCurrentList <- function(directory){
+  # input: loads the current data. Each time we I access data I'll save a file
+  # that has a date and a vector of what we've accessed. 
+  # what it does: accesses the latest file with the list.
   # output: and returns vector of names of what we have.
+  
+  
+  
+  listFiles <- list.files(directory)
+  latest <- sort(listFiles)[1]
+  
+  tmp <- readRDS(latest)
+  return(tmp)
+
 }
 
-getNewAdditions <- function(existingList, fullList){
+getNewAdditions <- function(existingList, fullList, directory){
   # input: list of current data we've accessed
+  # what it does: saves list so we have record of what we've accessed
   # output: list of new files we need to access
   
   updatedList = existingList[!existingList$V1 %in% fullList$V1,]
   
-}
-
-if(exists("updatedList")){
-  listToAccess = updatedList
-} else {
-  listToAccess = fullList
-}
-
-
-urls =  paste0(url, listToAccess)
-#fls = basename(urls)
-
-###### DOWNLOAD DATA
-
-
-# then download those urls
+  # this saves the list for next time
+  saveRDS(updatedList, file = paste(directory, paste("files_downloaded_", todayDate, ".rds", sep = ""), sep = "/"))
   
-arcWeatherRaw <- lapply(urls, function(fileLocation){
+  
+  return(updatedList)
+  
+}
+
+### create funciton that downloads the data. This function will also save the ##
+#list of what we've accessed so we have it for next time! what we'll do is
+#assume that we've accessed everything through the most up to date file name in
+#the current file for next time
+
+getRawData <- function(updatedList){
+  # input: list of files that we need to access to have up to date data
+  # what it does: turns those into urls and then accesses the data
+  # output: 
+  
+  urls =  paste0(url, listToAccess)
   print(basename(fileLocation))
   raw <- convertBinToRaster(readArcBinary(fileLocation), fileLocation)
   return(raw)
   
-})
+}
 
-todayDate <- format(Sys.time(), "%Y-%m-%d")
+
 
 #### saved dated arcWeatherRaw file so that I can steadily create an updated raster brick
 saveRDS(arcWeatherRaw, file=paste("weatherRasterList", todayDate, ".rds", sep = ""))
