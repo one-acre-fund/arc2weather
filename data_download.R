@@ -33,7 +33,7 @@ r <- raster("africa_arc.20180527.tif")
 # close(con)
 
 #head(tbl)
-
+todayDate <- format(Sys.time(), "%Y-%m-%d")
 forceUpdate <- FALSE
 
 ### full list
@@ -56,7 +56,8 @@ if(!file.exists("initialDatePull.Rdata") || forceUpdate) {
   
   
 }
-  
+
+###### functions needed to download the data  
 
 readArcBinary <- function(fileUrl){
   
@@ -83,6 +84,31 @@ convertBinToRaster <- function(binaryInput, fileUrl){
 
 
 ### determine which files to access
+### funciton to take the list of datd we have now, compare to what is available,
+### and produce list of what we need to pull to have fully updated list
+getFullList <- function(url){
+  
+  h = new_handle(dirlistonly=TRUE)
+  con = curl(url, "r", h)
+  fullList = read.table(con, stringsAsFactors=TRUE, fill=TRUE)
+  close(con)
+  saveRDS(fullList, file=paste(fullList, todayDate, ".rds", sep = ""))
+  
+}
+
+getCurrentList <- function(df){
+  # input: loads the current data 
+  # output: and returns vector of names of what we have.
+}
+
+getNewAdditions <- function(existingList, fullList){
+  # input: list of current data we've accessed
+  # output: list of new files we need to access
+  
+  updatedList = existingList[!existingList$V1 %in% fullList$V1,]
+  
+}
+
 if(exists("updatedList")){
   listToAccess = updatedList
 } else {
@@ -92,6 +118,9 @@ if(exists("updatedList")){
 
 urls =  paste0(url, listToAccess)
 #fls = basename(urls)
+
+###### DOWNLOAD DATA
+
 
 # then download those urls
   
