@@ -11,6 +11,9 @@ date_df_creator <- function(dateVector){
   # output: df with three columsn for aggreation
 
   numbers <- as.numeric(gsub(".*?([0-9]+).*", "\\1", dateVector))
+  if(length(numbers != 8)){
+    stop("\n the date vector is not the right length")
+  }
 
   year = as.numeric(substr(numbers, 1, 4))
   month = as.numeric(substr(numbers, 5, 6))
