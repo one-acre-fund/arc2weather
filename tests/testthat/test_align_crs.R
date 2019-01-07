@@ -1,10 +1,25 @@
-context("date_df_creator")
+context("align_crs")
 
+r <- list(raster::raster(matrix(rnorm(400),20,20)),
+          raster::raster(matrix(rnorm(200),10,15)))
 
-test_that("date_df_creator returns the right numbers", {
-  expect_equal(date_df_creator("20180519dateandfillerinfo"), data.frame(numbers = 20180519, year = 2018, month = 5, day = 19))
-  expect_equal(date_df_creator("19970109textandsurrouding"), data.frame(numbers = 19970119, year = 1997, month = 1, day = 9))
-  expect_error(date_df_creator("abcd1980117newtext", "the date vector is not the right length"))
+library(sp)                       # spatial library
+data(meuse)                       # load built in dataset
 
+# prepare the 3 components: coordinates, data, and proj4string
+coords <- meuse[ , c("x", "y")]   # coordinates
+data   <- meuse[ , 3:14]          # data
+crs    <- CRS("+init=epsg:28992") # proj4string of coords
+
+# make the spatial points data frame object
+spdf <- SpatialPointsDataFrame(coords = coords,
+                               data = data,
+                               proj4string = crs)
+
+test_that("align_crs receives the velox input", {
+  expect_error(align_crs(r, spdf), "veloxRaster object needs to be a velox object. First convert to Velox")
 })
 
+# test_that("align_crs receives spdf input"){
+#   expect_error(align_crs(velox(r[[1]]), data) )
+# }
