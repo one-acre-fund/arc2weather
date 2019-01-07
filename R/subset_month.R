@@ -2,7 +2,7 @@
 #'
 #' @param rList A list of raster in raster format.
 #' @param month A numeric month between 1 and 12 to indicate which month to keep. This can be a vector or range as well.
-#' @return List of two elements - first is the raster data in velox format. Second are the labels needed to identify the data later.
+#' @return List of raster subest by month
 #' @examples
 #' add(1, 1)
 #' add(10, 1)
