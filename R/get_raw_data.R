@@ -1,3 +1,10 @@
+#' pulls the yet to be accessed new data from the FTP
+#'
+#' @param url web url of FTP with the file names
+#' @param listToAccess the list of files to access from get_new_additions
+#' @return a list of rasters accessed from the FTP. Saves this file to the directory
+
+
 get_raw_data <- function(listToAccess, url){
   # input: list of files that we need to access to have up to date data
   # what it does: turns those into urls and then accesses the data
