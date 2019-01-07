@@ -19,7 +19,7 @@ libs <- c("tidyverse", "knitr", "readxl", "curl", "raster", "rgdal")
 lapply(libs, require, character.only = T)
 
 ## reference raster
-r <- raster("africa_arc.20180527.tif")
+#r <- raster("africa_arc.20180527.tif")
 
 
 #### load list of available data ####
@@ -144,13 +144,6 @@ getNewAdditions <- function(existingList, fullList, directory){
 #list of what we've accessed so we have it for next time! what we'll do is
 #assume that we've accessed everything through the most up to date file name in
 #the current file for next time
-
-arcWeatherRaw <- lapply(urls, function(fileLocation){
-  print(basename(fileLocation))
-  raw <- convertBinToRaster(readArcBinary(fileLocation), fileLocation)
-  return(raw)
-
-})
 
 getRawData <- function(listToAccess, url){
   # input: list of files that we need to access to have up to date data
