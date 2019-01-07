@@ -3,8 +3,6 @@
 #' @param directory Where to find the lists of rasters to combine into a single list
 #' @return A list of rasters to put into the convert_to_velox sequence to get it ready for extraction
 #' @examples
-#' add(1, 1)
-#' add(10, 1)
 
 
 combine_all_data <- function(directory = NULL){
