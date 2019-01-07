@@ -1,3 +1,11 @@
+#' creates list of new files to be downloaded, difference between available and current
+#'
+#' @param existingList files we've already downloaded
+#' @param fullList full list of files available on FTP
+#' @param directory where to find the current files and where to save data
+#' @return A vector of the file names to download
+
+
 get_new_additions <- function(existingList, fullList, directory){
   # input: list of current data we've accessed
   # what it does: saves list so we have record of what we've accessed
