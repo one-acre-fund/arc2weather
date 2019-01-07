@@ -1,3 +1,10 @@
+#' combines the data download functions into a single function
+#'
+#' @param url web url of FTP
+#' @param dir the directory where to find the files already downloaded
+#' @return list of rasters downloaded from the FTP
+
+
 update_arc_weather_data <- function(url, dir){
 
   currentList <- get_current_list(dir)
