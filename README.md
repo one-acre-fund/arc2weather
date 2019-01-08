@@ -21,7 +21,7 @@ To install this package, please do the following:
 
 # How to use
 
-The `extract_weather_data` function takes two inputs - the raw raster data and a set of GPS points. You can find the raw raster data here: [link](https://drive.google.com/drive/u/1/folders/1iQoN6mRkf3L7yySflmePe5begWKDdDQ7). The file is named `full_weather_list.rds`. And you can find the GPS data here: [link]() and the file is named `kenya_gps_2019.rds`. These are the inputs I've been using to test the package but of course we should try additional inputs to stress test the code!
+The `extract_weather_data` function takes two inputs - the raw raster data and a set of GPS points. You can find the raw raster data here: [link](https://drive.google.com/open?id=1iQoN6mRkf3L7yySflmePe5begWKDdDQ7). The file is named `full_weather_list.rds`. And you can find the GPS data here: [link](https://drive.google.com/open?id=1bXO74V5c4URUqtkPVeyABywjpfmFW2Mx) and the file is named `kenya_gps_2019.rds`. These are the inputs I've been using to test the package but of course we should try additional inputs to stress test the code!
 
 Running the code looks like:
 ~~~~
