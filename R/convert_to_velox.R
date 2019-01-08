@@ -21,7 +21,7 @@ convert_to_velox <- function(rList){
   # and create df of the labels from rList
   nameList <- lapply(rList, function(x) names(x))
   nameDf <- data.frame(label = do.call(rbind, nameList))
-  metaDf <- dateDfCreator(nameDf$label)
+  metaDf <- date_df_creator(nameDf$label)
 
   return(list(veloxLoop, metaDf))
 }
