@@ -3,6 +3,7 @@
 #' @param veloxRaster A list of two elements (from convert_to_velox function). First is list of velox raster, second is df of date information.
 #' @param spdf A SpatialPointsDataFrame of the GPS for which we'll be extracting data from the velox raster.
 #' @return A data.frame that is long by date. It has the observation for each date and GPS point in the raster data.
+#' @export
 
 extract_velox_gps <- function(veloxRaster, spdf){
   # input: v$extract_points(siteReproject) style code.

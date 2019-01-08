@@ -5,6 +5,7 @@
 #' @param latCol The Latitude column in the gpsFile
 #' @param lonCol The Longitude column in the gpsFile
 #' @return A data.frame with the extracted weather values and the date for each GPS point in the file.
+#' @export
 #' @examples
 #' add(1, 1)
 #' add(10, 1)
