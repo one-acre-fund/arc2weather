@@ -13,7 +13,7 @@ extract_velox_gps <- function(veloxRaster, spdf){
   veloxLoop <- veloxRaster[[1]]
 
   ## here is where we check the CRS and confirm they're compatible.
-  alignCRS(veloxLoop, spdf)
+  align_crs(veloxLoop, spdf)
 
   ## here is where we extract the values for the given GPS values.
   extractLoop <- list()
