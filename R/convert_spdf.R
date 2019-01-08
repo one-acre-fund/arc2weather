@@ -22,12 +22,12 @@ convert_spdf <- function(df, lat = NULL, long = NULL, defaultCRS = NULL){
   }
 
   if(class(df) == "data.frame" && is.null(defaultCRS)) {
-    converted <- SpatialPointsDataFrame(coords = df[,c(long, lat)], data = df, proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
+    converted <- sp::SpatialPointsDataFrame(coords = df[,c(long, lat)], data = df, proj4string = CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
     return(converted)
   }
 
   if(class(df) == "data.frame" && !is.null(defaultCRS)){
-    converted <- SpatialPointsDataFrame(coords = df[,c(long, lat)], data = df, proj4string = CRS(defaultCRS))
+    converted <- sp::SpatialPointsDataFrame(coords = df[,c(long, lat)], data = df, proj4string = CRS(defaultCRS))
     return(converted)
   }
 
