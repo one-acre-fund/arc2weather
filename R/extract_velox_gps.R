@@ -34,7 +34,7 @@ extract_velox_gps <- function(veloxRaster, spdf){
   fullDfList <- Map(cbind, split(veloxRaster[[2]], veloxRaster[[2]]$numbers), dateList)
 
   fullDf <- plyr::rbind.fill(fullDfList) %>%
-    rename(rainfall = V1)
+    dplyr::rename(rainfall = V1)
 
   # return the combined meta data and the extracted values
   return(fullDf)
