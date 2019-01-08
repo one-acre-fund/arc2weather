@@ -25,6 +25,9 @@ The `extract_weather_data` function takes two inputs - the raw raster data and a
 
 Running the code looks like:
 ~~~~
+# first make suer you install the arc2weather package following the instructions above
+library(arc2weather)
+
 dataDir <- "path/to/weather/file"
 weatherRaster <- readRDS(paste(dataDir, "full_weather_list.rds", sep = "/"))
 
