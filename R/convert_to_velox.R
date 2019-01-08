@@ -13,7 +13,7 @@ convert_to_velox <- function(rList){
   # a df of the labels to associate with the rasters so that I have something to work with when aggregating the data.
   veloxLoop <- list()
   for(i in seq_along(rList)){
-    tmp <- velox(rList[[i]])
+    tmp <- velox::velox(rList[[i]])
     #tmp$crop(oafAreaReproject)
     veloxLoop[[i]] <- tmp
   }
