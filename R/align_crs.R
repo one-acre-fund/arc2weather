@@ -32,6 +32,6 @@ align_crs <- function(veloxRasterList, spdf){
 
   crsFormatCheck <- veloxRasterList[[1]]$crs == sp::proj4string(spdf)
   if(!crsFormatCheck){
-    spdf <- spTransform(spdf, sp::CRS(veloxRasterList[[1]]$crs))
+    spdf <- sp::spTransform(spdf, sp::CRS(veloxRasterList[[1]]$crs))
   }
 }
