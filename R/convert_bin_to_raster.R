@@ -3,7 +3,6 @@
 #' @param binaryInput Binary input from FTP site
 #' @param fileUrl web url with location of file
 #' @return matrix of values to be converted to raster
-#' @examples
 
 
 

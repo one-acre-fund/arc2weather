@@ -2,7 +2,6 @@
 #'
 #' @param directory Where to find the lists of rasters to combine into a single list
 #' @return A list of rasters to put into the convert_to_velox sequence to get it ready for extraction
-#' @examples
 
 
 combine_all_data <- function(directory = NULL){
@@ -19,6 +18,6 @@ combine_all_data <- function(directory = NULL){
     return(tmp)
   }))
 
-  saveRDS(fullRasterList, file=paste(directory, "full_data_list.rds", sep = "/"))
+  saveRDS(fullRasterList, file=paste(directory, "full_weather_list.rds", sep = "/"))
 
 }
