@@ -17,7 +17,7 @@ extract_weather_data <- function(rawRasterData,
 
   datExtract <- extract_velox_gps(
     veloxRaster = convert_to_velox(rawRasterData),
-    spdf = convertSpdf(gpsFile, lonCol, latCol))
+    spdf = convert_spdf(gpsFile, lonCol, latCol))
 
   return(datExtract)
 }
