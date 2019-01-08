@@ -19,19 +19,22 @@ extract_velox_gps <- function(veloxRaster, spdf){
   extractLoop <- list()
   for(i in seq_along(veloxLoop)){
     extractLoop[[i]] <- veloxLoop[[i]]$extract_points(spdf)
-    extractLoop[[i]] <- as.data.frame(extractLoop[[i]])
+    extractLoop[[i]] <- as.data.frame(extractLoop[[i]], row.names = NULL)
   }
 
   # map the metaDf to the list so that I know the values of each extracted value. Keep this long?
   # extract loop has # of elements equal to the dates and each element is the length of the GPS points. I therefore want to combine dates with each element.
   # convert spdf@data into equal length list for easy mapping
-  spdfList <- rep(list(spdf@data), nrow(extractLoop[[1]]))
+  spdfList <- rep(list(spdf@data), length(extractLoop)) # rep spdfList so there's one copy for each extraction layer.
 
   # combine gps points with extracted values
-  dateList <- Map(cbind, spdfList, extractLoop)
+  dataList <- Map(cbind, spdfList, extractLoop)
 
   #combine date labels with the gps points and extracted values so the data can be aggregated as desired based on dates
-  fullDfList <- Map(cbind, split(veloxRaster[[2]], veloxRaster[[2]]$numbers), dateList)
+  prepDates <- split(veloxRaster[[2]], veloxRaster[[2]]$numbers)
+
+  fullDfList <- mapply(function(x, y) cbind(x, y, row.names = NULL),
+                 prepDates, dataList, SIMPLIFY = FALSE)
 
   fullDf <- plyr::rbind.fill(fullDfList) %>%
     dplyr::rename(rainfall = V1)
