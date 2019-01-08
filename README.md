@@ -1,6 +1,6 @@
-# ARC2 weather data package
+# [Africa Rainfall Climatology](http://www.cpc.ncep.noaa.gov/products/african_desk/cpc_intl/cf_test/africa/arc/arc_run_wa.shtml) weather data package
 
-Code for systematically downloading available arc2 weather .tif files for east Africa and shaping the data for inclusion in the One Acre Fund data warehouse.
+Code for systematically downloading available ARC2 weather .tif files for east Africa and shaping the data for inclusion in the One Acre Fund data warehouse.
 
 One Acre Fund has been using [aWhere](www.awhere.com) for weather data access for the simplicity of their GPS based API. However, we're looking to do more with site GPS and weather data and have not seen aWhere to be a superior product in terms of quality. Therefore we are accesing publically available weather datasets so that we can more easily communicate and share with collaborators on weather data related projects.
 
@@ -21,7 +21,7 @@ To install this package, please do the following:
 
 # How to use
 
-The `extract_weather_data` function takes two inputs - the raw raster data and a set of GPS points. You can find the raw raster data here: [link](https://drive.google.com/open?id=1iQoN6mRkf3L7yySflmePe5begWKDdDQ7). The example file is `weatherRasterList2019-01-07.rds`. And you can find the GPS data here: [link](https://drive.google.com/open?id=1bXO74V5c4URUqtkPVeyABywjpfmFW2Mx) and the file is named `kenya_gps_2019.rds`. These are the inputs I've been using to test the package but of course we should try additional inputs to stress test the code!
+The `extract_weather_data` function takes two inputs - the raw raster data and a set of GPS points. You can find the raw raster data here: [link](https://drive.google.com/open?id=1iQoN6mRkf3L7yySflmePe5begWKDdDQ7). The example file is `weatherRasterList2019-01-07.rds`. And you can find the GPS data here: [link](https://drive.google.com/open?id=1bXO74V5c4URUqtkPVeyABywjpfmFW2Mx) and the file is named `kenya_gps_2019.rds`. These are the inputs I've been using to test the package but of course we should try additional GPS to stress test the code!
 
 Running the code looks like:
 ~~~~
@@ -35,6 +35,10 @@ gpsDir <- "path/to/gps/file"
 gpsData <- readRDS(paste(gpsDir, "kenya_gps_2019.rds", sep = "/"))
 
 # and the package itself!
-weatherValues <- extract_weather_data(weatherRaster, gpsData)
+weatherValues <- extract_weather_data(weatherRaster, gpsData, "Latitude", "Longitude")
 
 ~~~~
+
+# References
+
+[rnoaa](https://github.com/ropensci/rnoaa) - R code to access other NOAA data sets. ARC2 isn't one of them.
