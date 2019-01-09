@@ -42,3 +42,4 @@ weatherValues <- extract_weather_data(weatherRaster, gpsData, "Latitude", "Longi
 # References
 
 [rnoaa](https://github.com/ropensci/rnoaa) - R code to access other NOAA data sets. ARC2 isn't one of them.
+[CHIRPS data FTP](ftp://ftp.chg.ucsb.edu/pub/org/chg/products/CHIRPS-2.0/) - will expand tools to include this as well
