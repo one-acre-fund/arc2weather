@@ -15,7 +15,7 @@ To install this package, please do the following:
   + Then, you'll need to edit the `.Renviron` file on your computer to make that PAT available to R when it tries to download the package.
   + To do this, type `usethis::edit_r_environ()` in R to edit the `.Renviron` file.
   + In the `.Renviron` file type `GITHUB_PAT = "longstringoflettersandnumbersyougetfromgithub"`. (What goes in the quotes is the PAT you got from GitHub). Then save and close that file. You might have to restart R for the changes to take effect.
-2. Open R script and download the package using `devtools::install.github(one-acre-fund/arc2weather)`. (You can check that the GITHUB_PAT is working as it should by first typing `Sys.getenv("GITHUB_PAT")` in the R console.)
+2. Open R script and download the package using `devtools::install_github(one-acre-fund/arc2weather)`. (You can check that the GITHUB_PAT is working as it should by first typing `Sys.getenv("GITHUB_PAT")` in the R console.)
 3. The package should now be available for your use!
 
 
