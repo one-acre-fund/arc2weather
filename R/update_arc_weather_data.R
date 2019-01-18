@@ -10,8 +10,9 @@ update_arc_weather_data <- function(dir){
   currentList <- get_current_list(dir)
   fullList <- get_full_list()
 
-  newAdditions <- get_new_additions(currentList, fullList, dir)
+  new_additions <- get_new_additions(currentList, fullList, dir)
 
-  get_raw_data(listToAccess = newAdditions)
+  get_raw_data(listToAccess = new_additions)
+  update_current_list(dir)
 
 }

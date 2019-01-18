@@ -5,11 +5,11 @@
 #' @param fileDirectory the file location locally where the data names are saved
 #' @return A vector of the file names available already
 
-check_data_directory <- function(fileDirectory){
+check_data_directory <- function(dir){
 
-  if(endsWith(fileDirectory, "arc2_weather_data")){
-    fileDirectory <- paste(fileDirectory, "access_lists", sep = "/")
+  if(endsWith(dir, "arc2_weather_data")){
+    fileDirectory <- paste(dir, "access_lists", sep = "/")
   }
 
-  return(fileDirectory)
+  return(dir)
 }

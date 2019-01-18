@@ -6,7 +6,7 @@
 #' @return an rds file that has all the data that has been accessed up to this
 #'   point
 
-update_current_list <- function(directory){
+update_current_list <- function(dir){
   directory <- check_data_directory(directory)
 
   listFiles <- list.files(directory, pattern = "files_downloaded")
