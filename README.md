@@ -55,7 +55,7 @@ update_arc_weather_data(arc2_weather_directory)
 
 ~~~~
 
-This will download the latest
+This will download the latest available weather data, save the data with the others, and update the reference list of the data that we have. This leaves us ready to download new data when it's available.
 
 # References
 
