@@ -1,7 +1,10 @@
 #' reads in binary file from arc2 weather ftp
 #'
-#' @param fileUrl web location of ftp
-#' @return data.frame with the weather data
+#' @param fileUrl thee full web location of ftp. This funciton lies in the
+#'   get_raw_data structure deliberately so that we are pulling the data with
+#'   the full url.
+#' @return weather data in binary format. This function is nested in
+#'   convert_bin_to_ratster and get_raw_data to go from binary to df.
 #' @examples
 #' add(1, 1)
 #' add(10, 1)
