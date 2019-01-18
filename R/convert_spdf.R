@@ -21,6 +21,12 @@ convert_spdf <- function(df, lat = NULL, long = NULL, defaultCRS = NULL){
     return(df)
   }
 
+  if(any(is.na(df[,lat])) | any(is.na(df[, lon]))){
+    # this will take the complete cases and proceed
+    cat("\n There are missing lat/lon values. Taking complete cases and proceeding...")
+    df <- df[complete.cases(df[, lat]), ]
+  }
+
   if(class(df) == "data.frame" && is.null(defaultCRS)) {
     converted <- sp::SpatialPointsDataFrame(coords = df[,c(long, lat)], data = df, proj4string = sp::CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"))
     return(converted)
