@@ -7,7 +7,7 @@
 #' @return a list of rasters accessed from the FTP. Saves this file to the directory
 
 
-get_raw_data <- function(listToAccess, saveDirectory = NULL, url = NULL){
+get_raw_data <- function(listToAccess, dir, url = NULL){
   # input: list of files that we need to access to have up to date data
   # what it does: turns those into urls and then accesses the data
   # output: saves data to raw_data location
@@ -15,9 +15,10 @@ get_raw_data <- function(listToAccess, saveDirectory = NULL, url = NULL){
     url <- "ftp://ftp.cpc.ncep.noaa.gov/fews/fewsdata/africa/arc2/bin/"
   }
 
-  if(is.null(saveDirectory)){
-    saveDirectory <- normalizePath(file.path("..", "arc2_weather_data", "raw_data"))
-  }
+
+  saveDirectory <- paste(dir, "raw_data", sep = "/")
+  listDir <- paste(dir, "access_lists", sep = "/")
+
 
   urls =  paste0(url, as.vector(listToAccess[,1]))
 
@@ -29,4 +30,7 @@ get_raw_data <- function(listToAccess, saveDirectory = NULL, url = NULL){
 
   saveRDS(newData, file = paste(saveDirectory, paste("weatherRasterList", todayDate(), ".rds", sep = ""), sep = "/"))
 
+  # and save the names of those newly downloaded data to the master list of downloaded data
+  newFiles <- do.call(rbind, lapply(newData, names))
+  saveRDS(newData, file = paste(dir, paste("files_downloaded_", todayDate(), ".rds", sep = ""), sep = "/"))
 }
