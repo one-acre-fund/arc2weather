@@ -15,10 +15,7 @@ get_raw_data <- function(listToAccess, dir, url = NULL){
     url <- "ftp://ftp.cpc.ncep.noaa.gov/fews/fewsdata/africa/arc2/bin/"
   }
 
-
-  saveDirectory <- paste(dir, "raw_data", sep = "/")
-  listDir <- paste(dir, "access_lists", sep = "/")
-
+  saveDirectory <- set_data_directory(dir)
 
   urls =  paste0(url, as.vector(listToAccess[,1]))
 
@@ -29,8 +26,4 @@ get_raw_data <- function(listToAccess, dir, url = NULL){
   })
 
   saveRDS(newData, file = paste(saveDirectory, paste("weatherRasterList", todayDate(), ".rds", sep = ""), sep = "/"))
-
-  # and save the names of those newly downloaded data to the master list of downloaded data
-  newFiles <- do.call(rbind, lapply(newData, names))
-  saveRDS(newData, file = paste(dir, paste("files_downloaded_", todayDate(), ".rds", sep = ""), sep = "/"))
 }

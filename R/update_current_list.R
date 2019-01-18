@@ -7,14 +7,14 @@
 #'   point
 
 update_current_list <- function(dir){
-  directory <- check_data_directory(dir)
+  directory <- set_list_directory(dir)
 
-  listFiles <- list.files(dir, pattern = "files_downloaded")
+  listFiles <- list.files(directory, pattern = "files_downloaded")
   fullList <- do.call(rbind, lapply(listFiles, function(f){
-    tmp <- readRDS(paste(dir, f, sep = "/"))
+    tmp <- readRDS(paste(directory, f, sep = "/"))
     return(tmp)
   }))
 
-  saveRDS(fullList, file = paste(dir, "full_list.rds", sep = "/"))
+  saveRDS(fullList, file = paste(directory, "full_list.rds", sep = "/"))
 
 }
