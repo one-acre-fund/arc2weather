@@ -39,6 +39,24 @@ weatherValues <- extract_weather_data(weatherRaster, gpsData, "Latitude", "Longi
 
 ~~~~
 
+# How to find and download data
+
+The ARC2 data are available at this FTP address: "ftp://ftp.cpc.ncep.noaa.gov/fews/fewsdata/africa/arc2/. The data are best avialable in binary format so the code will download the binary format and convert it to raster according to the process outlined in the ARC2 readme (see FTP).
+
+I've downloaded a large portion of the data to this [Google Drive folder](https://drive.google.com/open?id=1n1vJDfnWKdL_PiSfnXSyGiqLVl6h0XvL). You will need local access to these data if you want to extract weather values from the data meaning you'll need to download the folder to computer.
+
+The function `update_arc_weather_data()` will look at the available data, determine what data we already have, and then go and pull the latest data. This function assumes that you're pointing it at the Google Drive folder linked above! As an example:
+
+~~~~
+# this is where the data are on my computer
+arc2_weather_directory <- "/Users/mlowes/Google Drive/analyses/weather_analyses/arc2_weather_data"
+
+update_arc_weather_data(arc2_weather_directory)
+
+~~~~
+
+This will download the latest
+
 # References
 
 [rnoaa](https://github.com/ropensci/rnoaa) - R code to access other NOAA data sets. ARC2 isn't one of them.
