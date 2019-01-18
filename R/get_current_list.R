@@ -10,8 +10,6 @@ get_current_list <- function(fileDirectory){
   # what it does: accesses the latest file with the list.
   # output: and returns vector of names of what we have.
 
-  fileDirectory <- check_data_directory(fileDirectory)
-
   tmp <- readRDS(paste(fileDirectory, "full_list.rds", sep = "/"))
   return(tmp)
 
