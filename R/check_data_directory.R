@@ -8,7 +8,7 @@
 check_data_directory <- function(dir){
 
   if(endsWith(dir, "arc2_weather_data")){
-    fileDirectory <- paste(dir, "access_lists", sep = "/")
+    dir <- paste(dir, "access_lists", sep = "/")
   }
 
   return(dir)
