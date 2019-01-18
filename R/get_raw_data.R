@@ -28,6 +28,5 @@ get_raw_data <- function(listToAccess, saveDirectory = NULL, url = NULL){
   })
 
   saveRDS(newData, file = paste(saveDirectory, paste("weatherRasterList", todayDate(), ".rds", sep = ""), sep = "/"))
-  update_current_list()
 
 }
