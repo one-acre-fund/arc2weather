@@ -1,9 +1,9 @@
-context("align_crs")
+context("testing CRS input formats")
 
 r <- list(raster::raster(matrix(rnorm(400),20,20)),
-          raster::raster(matrix(rnorm(200),10,15)))
+          raster::raster(matrix(rnorm(400),20,20)))
 
-library(sp)                       # spatial library
+suppressWarnings(require(sp))                       # spatial library
 data(meuse)                       # load built in dataset
 
 # prepare the 3 components: coordinates, data, and proj4string
