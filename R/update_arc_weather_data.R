@@ -2,6 +2,7 @@
 #'
 #' @param url web url of FTP
 #' @param dir the directory where to find the files already downloaded
+#' @export
 #' @return list of rasters downloaded from the FTP
 
 
