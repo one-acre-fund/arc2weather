@@ -6,7 +6,7 @@
 
 set_data_directory <- function(dir){
 
-  if(endsWith(dir, "arc2_weather_data")){
+  if(endsWith(dir, "arc2_weather_data") && dir.exists(dir)){
     dir <- paste(dir, "raw_data", sep = "/")
   }
 
