@@ -45,7 +45,12 @@ The ARC2 data are available at this FTP address: ftp://ftp.cpc.ncep.noaa.gov/few
 
 I've downloaded a large portion of the data to this [Google Drive folder](https://drive.google.com/open?id=1n1vJDfnWKdL_PiSfnXSyGiqLVl6h0XvL). You will need local access to these data if you want to extract weather values from the data meaning you'll need to download the folder to computer.
 
-The function `update_arc_weather_data()` will look at the available data, determine what data we already have, and then go and pull the latest data. This function assumes that you're pointing it at the Google Drive folder linked above! As an example:
+The function `update_arc_weather_data()` will look at the available data, determine what data we already have, and then go and pull the latest data. This function assumes that you're pointing it at the Google Drive folder linked above! If you sync that Google drive folder to your computer, it should already have the subfolders you need to update the data and proceed with data extraction. A couple notes:
+
+* The `arc2_weather_data` is a shared data folder for 1AF users. This means that 1AF users shouldn't need to update this data folder themselves since we'll have it regularly updating in this central location. That also implies that any change to this folder affects all users!
+* The functions as they currently stand (1.20.19) are specifically set up with the 1AF structure in mind meaning that the download code won't be as useful for outside users. A medium term goal is to update these download functions so that the code can be used by others.
+
+As an example of how to download data:
 
 ~~~~
 # this is where the data are on my computer
