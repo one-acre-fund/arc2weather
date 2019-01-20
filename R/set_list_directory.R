@@ -7,8 +7,10 @@
 
 set_list_directory <- function(dir){
 
-  if(endsWith(dir, "arc2_weather_data")){
+  if(endsWith(dir, "arc2_weather_data") && dir.exists(dir)){
     dir <- paste(dir, "access_lists", sep = "/")
+  } else {
+    cat("\n Please check that you've set your directory to the main Google Drive folder!")
   }
 
   return(dir)
