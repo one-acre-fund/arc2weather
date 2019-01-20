@@ -47,7 +47,7 @@ I've downloaded a large portion of the data to this [Google Drive folder](https:
 
 The function `update_arc_weather_data()` will look at the available data, determine what data we already have, and then go and pull the latest data. This function assumes that you're pointing it at the Google Drive folder linked above! If you sync that Google drive folder to your computer, it should already have the subfolders you need to update the data and proceed with data extraction. A couple notes:
 
-* The `arc2_weather_data` is a shared data folder for 1AF users. This means that 1AF users shouldn't need to update this data folder themselves since we'll have it regularly updating in this central location. That also implies that any change to this folder affects all users!
+* The `arc2_weather_data` folder on Google Drive is a shared data folder for 1AF users. This means that 1AF users shouldn't need to update this data folder themselves since we'll have it regularly updating in this central location. That also implies that any change to this folder affects all users!
 * The functions as they currently stand (1.20.19) are specifically set up with the 1AF structure in mind meaning that the download code won't be as useful for outside users. A medium term goal is to update these download functions so that the code can be used by others.
 
 As an example of how to download data:
@@ -60,7 +60,7 @@ update_arc_weather_data(arc2_weather_directory)
 
 ~~~~
 
-This will download the latest available weather data, save the data with the others, and update the reference list of the data that we have. This leaves us ready to download new data when it's available.
+This will download the latest available weather data, save the data with the others, and update the reference list of the data that we have. This leaves us ready to extract updated values from the data for our calculations!
 
 # References
 
