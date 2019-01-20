@@ -12,7 +12,11 @@ get_current_list <- function(dir){
   # output: and returns vector of names of what we have.
   dir <- set_list_directory(dir)
 
-  tmp <- readRDS(paste(dir, "full_list.rds", sep = "/"))
-  return(tmp)
+  if(file.exists(paste(dir, "full_list.rds", sep = "/"))){
+    tmp <- readRDS(paste(dir, "full_list.rds", sep = "/"))
+    return(tmp)
+  } else {
+    stop(paste("\n full_list.rds file not in provided directory.", dir, "Please check directory", sep = " "))
+  }
 
 }
