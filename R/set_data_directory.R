@@ -7,10 +7,10 @@
 set_data_directory <- function(dir){
 
   if(endsWith(dir, "arc2_weather_data") && dir.exists(dir)){
-    dir <- paste(dir, "raw_data", sep = "/")
+    data_dir <- paste(dir, "raw_data", sep = "/")
   } else {
     stop("\n directory doesn't exist. Please check directory location.")
   }
 
-  return(dir)
+  return(data_dir)
 }
