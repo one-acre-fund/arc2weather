@@ -14,6 +14,6 @@ create_master_raw_data <- function(dir, pattern = "weatherRasterList"){
     return(df)
   }))
 
-  saveRDS(master_data, file = paste(dir, "master_weather_data.rds", sep))
+  saveRDS(master_data, file = paste(dir, "master_weather_data.rds", sep = "/"))
 
 }
