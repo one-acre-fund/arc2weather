@@ -13,7 +13,7 @@ update_arc_weather_data <- function(dir){
 
   new_additions <- get_new_additions(currentList, fullList, dir)
 
-  get_raw_data(listToAccess = new_additions)
+  get_raw_data(listToAccess = new_additions, dir = dir)
   update_current_list(dir)
 
 }
