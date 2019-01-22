@@ -16,4 +16,8 @@ update_arc_weather_data <- function(dir){
   get_raw_data(listToAccess = new_additions, dir = dir)
   update_current_list(dir)
 
+  create_master_raw_data(set_data_directory(dir))
+
+  clean_data_directory(set_data_directory(dir))
+
 }
