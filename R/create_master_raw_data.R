@@ -10,10 +10,12 @@ create_master_raw_data <- function(dir, pattern = "weatherRasterList"){
   list_to_combine <- list.files(dir, pattern)
 
   master_data <- do.call(rbind, lapply(list_to_combine, function(file_name){
+    print(paste0("loading ", file_name, "..."))
     df <- readRDS(paste(dir, file_name, sep = "/"))
     return(df)
   }))
 
+  print("saving master data file...")
   saveRDS(master_data, file = paste(dir, "master_weather_data.rds", sep = "/"))
 
 }
