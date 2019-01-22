@@ -7,7 +7,7 @@
 
 
 clean_data_directory <- function(dir, pattern = "weatherRasterList"){
-  list_to_remove <- list.files(dir, pattern)
+  list_to_remove <- paste(dir, list.files(dir, pattern), sep = "/")
 
   do.call(file.remove, list(list_to_remove))
 
