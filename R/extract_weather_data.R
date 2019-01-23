@@ -11,12 +11,13 @@
 #' add(10, 1)
 
 extract_weather_data <- function(rawRasterData,
-                               gpsFile,
-                               latCol,
-                               lonCol){
+                                 dates,
+                                 gpsFile,
+                                 latCol,
+                                 lonCol){
 
   datExtract <- extract_velox_gps(
-    veloxRaster = convert_to_velox(rawRasterData),
+    veloxRaster = convert_to_velox(rawRasterData, dates),
     spdf = convert_spdf(gpsFile, lonCol, latCol))
 
   return(datExtract)
