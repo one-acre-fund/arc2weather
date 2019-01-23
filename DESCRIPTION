@@ -15,7 +15,8 @@ Imports:
     raster,
     velox,
     tidyverse,
-    curl
+    curl,
+    rnoaa
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
