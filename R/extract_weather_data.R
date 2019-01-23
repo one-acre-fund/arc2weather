@@ -10,14 +10,13 @@
 #' add(1, 1)
 #' add(10, 1)
 
-extract_weather_data <- function(rawRasterData,
-                                 dates,
+extract_weather_data <- function(dates,
                                  gpsFile,
                                  latCol,
                                  lonCol){
 
   datExtract <- extract_velox_gps(
-    veloxRaster = convert_to_velox(rawRasterData, dates),
+    veloxRaster = convert_to_velox(convert_tibble_to_raster(arc2_api_download(dates)), dates),
     spdf = convert_spdf(gpsFile, lonCol, latCol))
 
   return(datExtract)
