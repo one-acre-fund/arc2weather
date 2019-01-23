@@ -31,7 +31,7 @@ extract_velox_gps <- function(veloxRaster, spdf){
   dataList <- Map(cbind, spdfList, extractLoop)
 
   #combine date labels with the gps points and extracted values so the data can be aggregated as desired based on dates
-  prepDates <- split(veloxRaster[[2]], veloxRaster[[2]]$numbers)
+  prepDates <- split(veloxRaster[[2]], veloxRaster[[2]]$date)
 
   fullDfList <- mapply(function(x, y) cbind(x, y, row.names = NULL),
                  prepDates, dataList, SIMPLIFY = FALSE)
