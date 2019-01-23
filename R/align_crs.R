@@ -6,11 +6,10 @@
 #' @examples
 #' add(1, 1)
 #' add(10, 1)
-
+#' notes: This should only be run once for the entire operation and thus it should be done before entering the extraction phase.
+#'
 align_crs <- function(veloxRasterList, spdf){
-  # inputs: a veloxRasterList and a spdf of GPS points. We'll work with the first element of the VeloxRaster after checking that all are the same CRS.
-  # outputs: spdf in the right format if it needs to be transformed
-  # notes: This should only be run once for the entire operation and thus it should be done before entering the extraction phase.
+
   if(class(veloxRasterList[[1]]) != "VeloxRaster"){
     stop("\n veloxRaster object needs to be a velox object. First convert to Velox")
   }
