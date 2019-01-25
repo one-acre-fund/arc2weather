@@ -27,18 +27,17 @@ The `extract_weather_data` function takes two inputs - the raw raster data and a
 
 Running the code looks like:
 ~~~~
-# first make suer you install the arc2weather package following the instructions above
+# first make suer you install the arc2weather package following the instructions above.
 library(arc2weather)
 
-dataDir <- "path/to/weather/file"
-weatherRaster <- readRDS(paste(dataDir, "full_weather_list.rds", sep = "/"))
+# provide the list of desired dates. This example accesses the full year of 2010.
+dates <- seq(from = as.Date("2010-01-01"), to = as.Date("2010-12-31"), by = "day")
 
-gpsDir <- "path/to/gps/file"
-gpsData <- readRDS(paste(gpsDir, "kenya_gps_2019.rds", sep = "/"))
+weatherValues <- extract_weather_data(dates, gpsData, "Latitude", "Longitude")
 
-# and the package itself!
-weatherValues <- extract_weather_data(weatherRaster, gpsData, "Latitude", "Longitude")
-
+# one year timing
+# user  system elapsed
+# 374.072 106.877 510.620
 ~~~~
 
 # How to find and download data
