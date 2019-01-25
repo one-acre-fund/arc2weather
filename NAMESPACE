@@ -2,3 +2,4 @@
 
 export(extract_velox_gps)
 export(extract_weather_data)
+export(update_arc_weather_data)
