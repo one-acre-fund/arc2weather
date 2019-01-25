@@ -4,13 +4,13 @@
 \alias{convert_to_velox}
 \title{Make sure the velox raster and the GPS spdf have the same CRS}
 \usage{
-convert_to_velox(rList)
+convert_to_velox(raster_list, list_of_dates)
 }
 \arguments{
 \item{rList}{A list of raster in raster format.}
 }
 \value{
-List of two elements - first is the raster data in velox format. Second are the labels needed to identify the data later.
+List of two elements - first is the raster data in velox format. Second are the labels needed to identify the data later as a data.frame.
 }
 \description{
 Make sure the velox raster and the GPS spdf have the same CRS

@@ -4,7 +4,7 @@
 \alias{get_raw_data}
 \title{pulls the yet to be accessed new data from the FTP}
 \usage{
-get_raw_data(listToAccess, saveDirectory = NULL, url = NULL)
+get_raw_data(listToAccess, dir, url = NULL)
 }
 \arguments{
 \item{listToAccess}{the list of files to access from get_new_additions}

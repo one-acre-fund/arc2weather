@@ -2,16 +2,21 @@
 % Please edit documentation in R/update_current_list.R
 \name{update_current_list}
 \alias{update_current_list}
-\title{takes the list of file names and creates a single master list that will be referenced and updated going forward.}
+\title{takes the list of file names and creates a single master list that will be
+referenced and updated going forward. I want this to run every time I update
+the arc2 weather data}
 \usage{
-update_current_list(directory = NULL)
+update_current_list(dir)
 }
 \arguments{
 \item{directory}{the location where those files live}
 }
 \value{
-an rds file that has all the data that has been accessed up to this point
+an rds file that has all the data that has been accessed up to this
+  point
 }
 \description{
-takes the list of file names and creates a single master list that will be referenced and updated going forward.
+takes the list of file names and creates a single master list that will be
+referenced and updated going forward. I want this to run every time I update
+the arc2 weather data
 }

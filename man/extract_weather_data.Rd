@@ -4,16 +4,16 @@
 \alias{extract_weather_data}
 \title{Combines the full functionality to take the raw inputs and produce data.frame of extracted weather data and dates.}
 \usage{
-extract_weather_data(rawRasterData, gpsFile, latCol, lonCol)
+extract_weather_data(dates, gpsFile, latCol, lonCol)
 }
 \arguments{
-\item{rawRasterData}{list of raw raster data from Arc2 weather site}
-
 \item{gpsFile}{GPS file, probably from data warehouse, of GPS points for which we want to extract weather values}
 
 \item{latCol}{The Latitude column in the gpsFile}
 
 \item{lonCol}{The Longitude column in the gpsFile}
+
+\item{rawRasterData}{list of raw raster data from Arc2 weather site}
 }
 \value{
 A data.frame with the extracted weather values and the date for each GPS point in the file.

@@ -4,7 +4,7 @@
 \alias{get_new_additions}
 \title{creates list of new files to be downloaded, difference between available and current}
 \usage{
-get_new_additions(existingList, fullList, directory)
+get_new_additions(existingList, fullList, dir)
 }
 \arguments{
 \item{existingList}{files we've already downloaded}

@@ -4,14 +4,14 @@
 \alias{convert_spdf}
 \title{Convert data.frame of GPS points in decimal degree format to an SpatialPointsDataFrame}
 \usage{
-convert_spdf(df, lat = NULL, long = NULL, defaultCRS = NULL)
+convert_spdf(df, lat = NULL, lon = NULL, defaultCRS = NULL)
 }
 \arguments{
 \item{df}{A data frame of GPS points in decimal degree format}
 
 \item{lat}{The variable that has the Latitude data}
 
-\item{long}{The variable that has the Longitude data}
+\item{lon}{The variable that has the Longitude data}
 
 \item{defaultCRS}{The default CRS to use. If none is provided then it uses the default latlon CRS.}
 }

@@ -20,4 +20,6 @@ Make sure the velox raster and the GPS spdf have the same CRS
 \examples{
 add(1, 1)
 add(10, 1)
+notes: This should only be run once for the entire operation and thus it should be done before entering the extraction phase.
+
 }

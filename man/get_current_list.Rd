@@ -4,13 +4,14 @@
 \alias{get_current_list}
 \title{gets names of current files already downloaded and worked with}
 \usage{
-get_current_list(fileDirectory = NULL)
+get_current_list(dir)
 }
 \arguments{
-\item{fileDirectory}{the file location locally where the data names are saved}
+\item{dir}{the file location locally where the data names are saved. This
+should be one step above the access_list folder}
 }
 \value{
-A vector of the file names available already
+A vector of the file names available already by loading the joined file.
 }
 \description{
 gets names of current files already downloaded and worked with

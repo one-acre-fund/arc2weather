@@ -7,10 +7,13 @@
 read_arc_binary(fileUrl)
 }
 \arguments{
-\item{fileUrl}{web location of ftp}
+\item{fileUrl}{thee full web location of ftp. This funciton lies in the
+get_raw_data structure deliberately so that we are pulling the data with
+the full url.}
 }
 \value{
-data.frame with the weather data
+weather data in binary format. This function is nested in
+  convert_bin_to_ratster and get_raw_data to go from binary to df.
 }
 \description{
 reads in binary file from arc2 weather ftp
