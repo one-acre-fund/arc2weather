@@ -1,5 +1,7 @@
 # [Africa Rainfall Climatology](http://www.cpc.ncep.noaa.gov/products/african_desk/cpc_intl/cf_test/africa/arc/arc_run_wa.shtml) weather data package
 
+**Work in progress** Check with [Matt Lowes](mailto::matt.lowes@oneacrefund.org) if you have questions!
+
 Code for systematically downloading available ARC2 weather .tif files for east Africa and shaping the data for inclusion in the One Acre Fund data warehouse.
 
 One Acre Fund has been using [aWhere](www.awhere.com) for weather data access for the simplicity of their GPS based API. However, we're looking to do more with site GPS and weather data and have not seen aWhere to be a superior product in terms of quality. Therefore we are accesing publically available weather datasets so that we can more easily communicate and share with collaborators on weather data related projects.
