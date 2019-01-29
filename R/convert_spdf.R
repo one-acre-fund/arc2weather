@@ -5,6 +5,7 @@
 #' @param lon The variable that has the Longitude data
 #' @param defaultCRS The default CRS to use. If none is provided then it uses the default latlon CRS.
 #' @return A spdf with a default CRS. This default CRS will then need to be converted.
+#' @export
 #' @examples
 #' add(1, 1)
 #' add(10, 1)
