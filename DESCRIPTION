@@ -16,7 +16,8 @@ Imports:
     velox,
     tidyverse,
     curl,
-    rnoaa
+    rnoaa,
+    tibble
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
