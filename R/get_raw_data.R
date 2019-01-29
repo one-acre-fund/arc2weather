@@ -2,8 +2,6 @@
 #'
 #' @param url web url of FTP with the file names
 #' @param listToAccess the list of files to access from get_new_additions
-#' @inheritParams get_raw_data()
-#' @inheritParams convert_bin_to_raster()
 #' @return a list of rasters accessed from the FTP. Saves this file to the directory
 
 
