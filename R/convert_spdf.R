@@ -34,7 +34,6 @@ convert_spdf <- function(df, lat = NULL, lon = NULL, defaultCRS = NULL){
     cat("\n There are missing lat/lon values. Taking complete cases and proceeding...")
     df <- df[complete.cases(df[, lat]), ]
     df <- df[complete.cases(df[, lon]), ]
-    return(df)
   }
 
   if(class(df) == "data.frame" && is.null(defaultCRS)) {
