@@ -13,7 +13,7 @@
 convert_spdf <- function(df, lat = NULL, lon = NULL, defaultCRS = NULL){
 
   # make sure that input is not tibble and if so, convert to df.
-  if(tibble:is_tibble(df)){
+  if(tidyverse::is_tibble(df)){
     df <- as.data.frame(df)
   }
 
