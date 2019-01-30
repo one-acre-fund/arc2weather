@@ -17,12 +17,14 @@ convert_spdf <- function(df, lat = NULL, lon = NULL, defaultCRS = NULL){
     df <- as.data.frame(df)
   }
 
-  # convert lat lon to numeric
-  df[, lat] <- suppressWarnings(as.numeric(df[,lat]))
-  df[, lon] <- suppressWarnings(as.numeric(df[,lon]))
-
   if(is.null(lat) & is.null(lon) & class(df)=="data.frame"){
     stop("\n df is a data.frame. Please indicate the lat/lon variables.")
+  }
+
+  # convert lat lon to numeric
+  if(class(df) == "data.frame"){
+    df[, lat] <- suppressWarnings(as.numeric(df[,lat]))
+    df[, lon] <- suppressWarnings(as.numeric(df[,lon]))
   }
 
   if(class(df) == "SpatialPointsDataFrame"){
