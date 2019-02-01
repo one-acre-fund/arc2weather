@@ -4,9 +4,13 @@
 \alias{extract_weather_data}
 \title{Combines the full functionality to take the raw inputs and produce data.frame of extracted weather data and dates.}
 \usage{
-extract_weather_data(dates, gpsFile, latCol, lonCol)
+extract_weather_data(start_date, end_date, gpsFile, latCol, lonCol)
 }
 \arguments{
+\item{start_date}{start date, formatted YYYY-MM-DD}
+
+\item{end_date}{end date, formatted YYYY-MM-DD}
+
 \item{gpsFile}{GPS file, probably from data warehouse, of GPS points for which we want to extract weather values}
 
 \item{latCol}{The Latitude column in the gpsFile}
@@ -22,6 +26,5 @@ A data.frame with the extracted weather values and the date for each GPS point i
 Combines the full functionality to take the raw inputs and produce data.frame of extracted weather data and dates.
 }
 \examples{
-add(1, 1)
-add(10, 1)
+weatherValues <- extract_weather_data(dates, gpsData, "Latitude", "Longitude")
 }
