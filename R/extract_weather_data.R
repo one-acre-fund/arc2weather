@@ -16,6 +16,8 @@ extract_weather_data <- function(start_date,
                                  latCol,
                                  lonCol){
 
+  dates <- create_date_vector(start_date, end_date)
+
   datExtract <- extract_velox_gps(
     veloxRaster = convert_to_velox(convert_tibble_to_raster(arc2_api_download(dates)), dates),
     spdf = convert_spdf(gpsFile, lonCol, latCol))
