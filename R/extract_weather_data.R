@@ -4,13 +4,14 @@
 #' @param gpsFile GPS file, probably from data warehouse, of GPS points for which we want to extract weather values
 #' @param latCol The Latitude column in the gpsFile
 #' @param lonCol The Longitude column in the gpsFile
+#' @inheritParams create_date_vector
 #' @return A data.frame with the extracted weather values and the date for each GPS point in the file.
 #' @export
 #' @examples
-#' add(1, 1)
-#' add(10, 1)
+#' weatherValues <- extract_weather_data(dates, gpsData, "Latitude", "Longitude")
 
-extract_weather_data <- function(dates,
+extract_weather_data <- function(start_date,
+                                 end_date,
                                  gpsFile,
                                  latCol,
                                  lonCol){
