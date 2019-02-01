@@ -10,20 +10,20 @@ Description: This package downloads the latest ARC2 weather data and prepares th
         Those resulting data are then available for uses at One Acre Fund. This package handles the funcitons needed to download, organize, shape, extract, and 
         merge the weather data points for entry into a SQL database. The package utilizes the velox package for faster raster manipulation.
 Imports: 
-    sp, 
-    rgdal, 
-    raster,
-    velox,
-    tidyverse,
-    curl,
-    rnoaa,
-    tibble
+    sp (>= 1.3.1), 
+    rgdal (>= 1.3.6), 
+    raster (>= 2.8.4),
+    velox (>= 0.2.0),
+    tidyverse (>= 1.2.1),
+    curl (>= 3.3),
+    rnoaa (>= 0.8.4),
+    tibble (>= 2.0.1)
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Suggests: 
-    testthat,
-    knitr,
-    rmarkdown
+    testthat (>= 2.0.1),
+    knitr (>= 1.21),
+    rmarkdown (>= 1.11)
 VignetteBuilder: knitr
