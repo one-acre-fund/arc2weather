@@ -23,24 +23,33 @@ To install this package, please do the following:
 
 # How to use
 
-The `extract_weather_data` function takes two inputs - the raw raster data and a set of GPS points. You can find the raw raster data here: [link](https://drive.google.com/open?id=1iQoN6mRkf3L7yySflmePe5begWKDdDQ7). The example file is `weatherRasterList2019-01-07.rds`. And you can find the GPS data here: [link](https://drive.google.com/open?id=1bXO74V5c4URUqtkPVeyABywjpfmFW2Mx) and the file is named `kenya_gps_2019.rds`. These are the inputs I've been using to test the package but of course we should try additional GPS to stress test the code!
+The `extract_weather_data` function takes several inputs:
+
+* `start_date`- the lower bound date for which you want weather values.
+* `end_date` - the upper bound date for which you want weather values.
+* `gps_file` - the data file with the GPS points
+* `lat_col` - the latitude column in the GPS data 
+* `lon_col` - the longitude colum in the GPS data
+
+You can find example GPS data here: [link](https://drive.google.com/open?id=1bXO74V5c4URUqtkPVeyABywjpfmFW2Mx) and the file is named `kenya_gps_2019.rds`. These are the inputs I've been using to test the package but of course we should try additional GPS to stress test the code! The code currently assumes the `gps_file` is in the same working directory but future versions will accommodate other file locations.
 
 Running the code looks like:
 ~~~~
 # first make suer you install the arc2weather package following the instructions above.
 library(arc2weather)
 
-# provide the list of desired dates. This example accesses the full year of 2010.
-dates <- seq(from = as.Date("2010-01-01"), to = as.Date("2010-12-31"), by = "day")
-
-weatherValues <- extract_weather_data(dates, gpsData, "Latitude", "Longitude")
+weatherValues <- extract_weather_data(start_date = "2010-01-01", 
+                                      end_date = "2010-12-31", 
+                                      gps_file = gpsData, 
+                                      lat_col = "Latitude", 
+                                      lon_col = "Longitude")
 
 # one year timing
 # user  system elapsed
 # 374.072 106.877 510.620
 ~~~~
 
-# How to find and download data
+# How to find and download data (depreciated)
 
 **I'm keeping this here for now but the new API system should mean that we don't have download the data locally first. The files were getting too big to load into R for extraction**.
 
@@ -64,6 +73,11 @@ update_arc_weather_data(arc2_weather_directory)
 ~~~~
 
 This will download the latest available weather data, save the data with the others, and update the reference list of the data that we have. This leaves us ready to extract updated values from the data for our calculations!
+
+# Todo
+
+* Future stress testing of other GPS formats.
+* Add flexible location for `gps_file`
 
 # References
 
