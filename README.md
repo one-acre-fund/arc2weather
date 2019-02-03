@@ -34,6 +34,7 @@ The `extract_weather_data` function takes several inputs:
 You can find example GPS data here: [link](https://drive.google.com/open?id=1bXO74V5c4URUqtkPVeyABywjpfmFW2Mx) and the file is named `kenya_gps_2019.rds`. These are the inputs I've been using to test the package but of course we should try additional GPS to stress test the code! The code currently assumes the `gps_file` is in the same working directory but future versions will accommodate other file locations.
 
 Running the code looks like:
+
 ~~~~
 # first make suer you install the arc2weather package following the instructions above.
 library(arc2weather)
