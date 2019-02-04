@@ -18,7 +18,7 @@ convert_to_velox <- function(raster_list, date_vector){
   # and create df of the labels from rList
   #nameList <- lapply(rList, function(x) names(x))
   nameDf <- as.data.frame(date_vector)
-  metaDf <- date_df_creator(nameDf$dates)
+  metaDf <- date_df_creator(nameDf$date_vector)
 
   return(list(veloxLoop, metaDf))
 }
